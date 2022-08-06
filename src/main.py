@@ -66,6 +66,9 @@ def post(_: ...): ...
 relation ->
 POST /notes.html HTTP/1.1\r\nContent-Length: 30\r\nCookie: username=sleepyxd; password=urmom123\r\n\r\naction=addNote&input=["index{i}"]'.encode()
 method; url; param; content-length; cookies; auth; verify; action within the browser or whatever tf
+
+btw making my own requests library cuz i have to be able to bypass cloudflare somehow yk yk and also encrypt the shit and udnerstnad how it works 
+hml its 10am i need slep xD
 '''
 
 def _pseudo(
