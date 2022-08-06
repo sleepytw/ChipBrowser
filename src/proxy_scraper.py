@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 import requests, json, random as r
 
-rdata=json.load(open('requestsData.json'));
+rdata=json.load(open('requests_data.json'));
 
 def _analyze(_: ...) -> None:
     proxies=([{_p: _i} for _p in rdata['proxies'] for _i in rdata['proxies'][_p]])

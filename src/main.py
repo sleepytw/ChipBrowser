@@ -1,10 +1,12 @@
 import json, os, importlib, socket
 class EmptyException(Exception): pass
 
+rdata, data = (json.load(open(values)) for (_, values) in enumerate(['requests_data.json', 'data.json']))
+
 def _get(
     _requirements: ...,
     _url: ...,
-    _params: ..., *_args,
+    _params: ...,
     _data: ...,
     _headers: ...,
     _cookies: ...,
@@ -18,13 +20,13 @@ def _get(
     _verify: ...,
     _cert: ...,
     _json: ...
-) -> None: return [bool(_ for _ in locals()['_requirements'])]
+) -> "GET":  return [bool(type(_u16)) for _u16 in locals().values()]
 
 def _post(
     _requirements: ...,
     _url: ...,
     _data: ...,
-    _json: ..., *_args,
+    _json: ...,
     _params: ...,
     _headers: ...,
     _cookies: ...,
@@ -37,19 +39,25 @@ def _post(
     _stream: ...,
     _verify: ...,
     _cert: ...,
-) -> None: return [bool(_ for _ in locals()['_requirements'])]
+) -> "POST": return [bool(type(_u15)) for _u15 in locals().values()]
 
-'''/ bool.check to make sure that the requirements are intact before execution but idk might not need it will see/'''
+'''/ bool.check to make sure that the requirements are the same as the ones given after initial execution but idk might not need it will see/'''
 
+def _http(
+    _method: str, #"POST" | "GET"
+    _path: str, #/hidden.html
+    _version: str, #"HTTP /1.0" | "HTTP /1.1"
+    _host: str, #localhost:8000
+    _agent: dict, #globals()[data]['headers'],
+    _connection: str,
+    _contentLength: int
+) -> None: return [bool(type(_u6)) for _u6 in locals().values()] #def of a get&post req params after http parsing
 
-def _http(_: ...) -> None: ... #def of a get&post req params after http parsing
-
-def validate(file):
+def validate(file, _cache='__ERROR') -> locals():
     """ Check if file is empty by confirming if its size is 0 bytes"""
     return os.path.exists(f'{file}.py') and os.stat(f'{file}.py').st_size == 0
 
-def modules(_c=None): #_c ~ cache
-    data=json.load(open('data.json')); _c=list();
+def modules(_c: list) -> ...: #_c ~ cache {initialize([]);}
     try:
         for _m in data['modules']:
             if validate(_m): _c.append(_m);
@@ -59,18 +67,45 @@ def modules(_c=None): #_c ~ cache
     except EmptyException:
         print(f"""Unimported module/s:\n{['%s' % _i for _i in _c]}""")
 
-def get(_: ...): ...
-def post(_: ...): ...
+def get(
+    _address: tuple, #dst.address&port
+    _proxy: tuple, #init proxy address&port
+) -> "GET":
+    sock=socket.socket(socket.AF_INET, socket.SOCK_STREAM) #-- HTTP onto TCP/IP
+    sock.connect(_proxy)
+    sock.sendall(f"""
+        GET / HTTP/1.1\r\n
+        Host: {_address[0]}:{_address[1]}\r\n
+        {''.join(rdata['headers'])}: {''.join(rdata['headers']['User-Agent'])}\r\n
+        Connection: keep-alive\r\n
+        Content-Length: 0\r\n
+    """.encode())       
+
+    '''
+    baiscally what hgapepns in the shitty hardcoded bullshit above is it conncets to a proxy and prays
+    that it redirects the http msg sent to the proxy, to the site we're tryna reach
+    sorry fucko ur 1for2 
+    '''
+
+    '''
+    hopefully my reptile brain will remember to hash and encrypt the info im sending out 
+    to the proxy cuz with free proxies and encrypt the latter cuz
+    its kinda not very safe hhaha xD
+    '''
+
+def post(
+    _address: tuple, #dst.address&port
+    _proxy: tuple, #init proxy address&port
+) -> "POST": 
+    ...
 
 '''
 relation ->
 POST /notes.html HTTP/1.1\r\nContent-Length: 30\r\nCookie: username=sleepyxd; password=urmom123\r\n\r\naction=addNote&input=["index{i}"]'.encode()
 method; url; param; content-length; cookies; auth; verify; action within the browser or whatever tf
-
-btw making my own requests library cuz i have to be able to bypass cloudflare somehow yk yk and also encrypt the shit and udnerstnad how it works 
-hml its 10am i need slep xD
 '''
 
 def _pseudo(
-    _: ...
+    _address: ...,
+    _proxy: ...
     ) -> None: socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((_, _)); #-- HTTP onto TCP/IP
