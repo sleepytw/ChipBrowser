@@ -1,7 +1,7 @@
 
 {
     "modules": ["ui", 
-                "proxyScraper",
+                "proxy_scaper",
                 "identifier"],
     "null": null
 }
