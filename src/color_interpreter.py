@@ -97,10 +97,10 @@ class Colorize:
             except IliterateMonkey:
                 print('Non-existant given value by your dumbass in the database.')
 
-        __operand__=list(zip(colors, [f'"{_line[_p+1:_i]}"' for _p, _i in _str.items()]))
+        __operand__=list(zip(colors, [f'"""{_line[_p+1:_i]}"""' for _p, _i in _str.items()]))
         _msg='+'.join(['+'.join(_cache) for _cache in __operand__])
-        return exec(f'print(%s)' % (_msg))
+        return exec(f"print(%s)" % (_msg))
         
 
-style=Colorize()
-style.beautify('&BLACK@■%&RED@■%&GREEN@■%&YELLOW@■%&BLUE@■%&MAGENTA@%■&CYAN@■%&WHITE@■%&RESET@■%')
+_style=Colorize()
+_style.beautify('&BLACK@■%&RED@■%&GREEN@■%&YELLOW@■%&BLUE@■%&MAGENTA@%■&CYAN@■%&WHITE@■%&RESET@■%')

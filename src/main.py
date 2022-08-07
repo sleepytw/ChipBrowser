@@ -1,9 +1,13 @@
 import json, os, importlib, socket
-from color_interpreter import Fore, Back, Style
+from color_interpreter import Fore, Back, Style, _style
 from json_dump import *
 class EmptyException(Exception): pass
+os.system("")
 
-rdata, data = (json.load(open(values)) for (_, values) in enumerate(['requests_data.json', 'data.json']))
+path = os.path.dirname(os.path.abspath(__file__)) #path to file
+_ext=path.replace('src', 'ext') # path to prev parent dir
+
+rdata, data = (json.load(open(values)) for (_, values) in enumerate([f'{_ext}\\requests_data.json', f'{_ext}\\data.json']))
 
 def _get(
     _requirements: ...,
@@ -84,7 +88,7 @@ def get(
     """.encode())
     response=sock.recv(4096)
     sock.close()
-    return response.decode()
+    return _style.beautify(f'&CYAN@{response.decode()}%&RESET@%')
 
     #Connection: keep-alive\r\n #HTTP/1.1 default behaviour, but "close" can be used to mimic the HTTP/1.0 behaviour
 
@@ -104,8 +108,8 @@ def get(
     its kinda not very safe hhaha xD
     '''
 
-response=get(('http://httpbin.org/ip', 80), ('103.117.192.14', 80))
-print(response)
+response=get(('http://httpbin.org/ip', 80), ('51.91.157.66', 80))
+#print(response)
 
 def post(
     _address: tuple, #dst.address&port (if dst.ip is a domain it will convert it to ip format else ...)
