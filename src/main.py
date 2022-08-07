@@ -1,4 +1,5 @@
 import json, os, importlib, socket
+from color_interpreter import *
 class EmptyException(Exception): pass
 
 rdata, data = (json.load(open(values)) for (_, values) in enumerate(['requests_data.json', 'data.json']))
@@ -75,7 +76,7 @@ def get(
     sock.connect(_proxy);
     sock.sendall(f"""
         GET / HTTP/1.1\r\n
-        Host: {_address[0]}
+        Host: {_address[0]}\r\n
         {''.join(rdata['headers'])}: {''.join(rdata['headers']['User-Agent'])}\r\n
         Connection: keep-alive\r\n
         Content-Length: 0\r\n\r\n
@@ -83,18 +84,10 @@ def get(
     response=sock.recv(4096)
     sock.close()
     return response.decode()
-    
-    print(f"""
-        GET / HTTP/1.1\r\n
-        Host: {_address[0]}\r\n
-        {''.join(rdata['headers'])}: {''.join(rdata['headers']['User-Agent'])}\r\n
-        Connection: keep-alive\r\n
-        Content-Length: 0\r\n
-    """)
 
     #Connection: keep-alive\r\n #HTTP/1.1 default behaviour, but "close" can be used to mimic the HTTP/1.0 behaviour
 
-    _ALTERNATIVE= f"{socket.gethostbyname(_address[0]) if (_address[0]==str() and \
+    _ALTERNATIVE= "{socket.gethostbyname(_address[0]) if (_address[0]==str() and \
     ('www' or 'http://' or 'https://') in _address[0]) \
     else _address[0]}:{_address[1]}\r\n"
 
