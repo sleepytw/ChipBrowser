@@ -67,19 +67,36 @@ def modules(_c: list) -> ...: #_c ~ cache {initialize([]);}
     except EmptyException:
         print(f"""Unimported module/s:\n{['%s' % _i for _i in _c]}""")
 
-def get(
-    _address: tuple, #dst.address&port
-    _proxy: tuple, #init proxy address&port
+def get(    
+    _address: tuple, #dst.address&port (if dst.ip is a domain it will convert it to ip format else ...)
+    _proxy: tuple, #init proxy address&port (...)
 ) -> "GET":
-    sock=socket.socket(socket.AF_INET, socket.SOCK_STREAM) #-- HTTP onto TCP/IP
-    sock.connect(_proxy)
+    sock=socket.socket(socket.AF_INET, socket.SOCK_STREAM); #-- HTTP onto TCP/IP
+    sock.connect(_proxy);
     sock.sendall(f"""
         GET / HTTP/1.1\r\n
-        Host: {_address[0]}:{_address[1]}\r\n
+        Host: {_address[0]}
+        {''.join(rdata['headers'])}: {''.join(rdata['headers']['User-Agent'])}\r\n
+        Connection: keep-alive\r\n
+        Content-Length: 0\r\n\r\n
+    """.encode())
+    response=sock.recv(4096)
+    sock.close()
+    return response.decode()
+    
+    print(f"""
+        GET / HTTP/1.1\r\n
+        Host: {_address[0]}\r\n
         {''.join(rdata['headers'])}: {''.join(rdata['headers']['User-Agent'])}\r\n
         Connection: keep-alive\r\n
         Content-Length: 0\r\n
-    """.encode())       
+    """)
+
+    #Connection: keep-alive\r\n #HTTP/1.1 default behaviour, but "close" can be used to mimic the HTTP/1.0 behaviour
+
+    _ALTERNATIVE= "{socket.gethostbyname(_address[0]) if (_address[0]==str() and \
+    ('www' or 'http://' or 'https://') in _address[0]) \
+    else _address[0]}:{_address[1]}\r\n"
 
     '''
     baiscally what hgapepns in the shitty hardcoded bullshit above is it conncets to a proxy and prays
@@ -93,8 +110,11 @@ def get(
     its kinda not very safe hhaha xD
     '''
 
+response=get(('http://httpbin.org/ip', 80), ('103.117.192.14', 80))
+print(response)
+
 def post(
-    _address: tuple, #dst.address&port
+    _address: tuple, #dst.address&port (if dst.ip is a domain it will convert it to ip format else ...)
     _proxy: tuple, #init proxy address&port
 ) -> "POST": 
     ...
@@ -108,4 +128,4 @@ method; url; param; content-length; cookies; auth; verify; action within the bro
 def _pseudo(
     _address: ...,
     _proxy: ...
-    ) -> None: socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((_, _)); #-- HTTP onto TCP/IP
+    ) -> None: socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((..., ...)); #-- HTTP onto TCP/IP
