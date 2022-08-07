@@ -1,5 +1,6 @@
 import json, os, importlib, socket
-from color_interpreter import *
+from color_interpreter import Fore, Back, Style
+from json_dump import *
 class EmptyException(Exception): pass
 
 rdata, data = (json.load(open(values)) for (_, values) in enumerate(['requests_data.json', 'data.json']))
