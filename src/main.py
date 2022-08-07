@@ -94,7 +94,7 @@ def get(
 
     #Connection: keep-alive\r\n #HTTP/1.1 default behaviour, but "close" can be used to mimic the HTTP/1.0 behaviour
 
-    _ALTERNATIVE= "{socket.gethostbyname(_address[0]) if (_address[0]==str() and \
+    _ALTERNATIVE= f"{socket.gethostbyname(_address[0]) if (_address[0]==str() and \
     ('www' or 'http://' or 'https://') in _address[0]) \
     else _address[0]}:{_address[1]}\r\n"
 
