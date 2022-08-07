@@ -98,10 +98,9 @@ class Colorize:
                 print('Non-existant given value by your dumbass in the database.')
 
         __operand__=list(zip(colors, [f'"{_line[_p+1:_i]}"' for _p, _i in _str.items()]))
-        print(__operand__)
         _msg='+'.join(['+'.join(_cache) for _cache in __operand__])
-        exec(f'print(%s)' % (_msg))
+        return exec(f'print(%s)' % (_msg))
         
 
 style=Colorize()
-style.beautify('&RED@lmfao%&GREEN@haha%&RESET_ALL@%')
+style.beautify('&BLACK@■%&RED@■%&GREEN@■%&YELLOW@■%&BLUE@■%&MAGENTA@%■&CYAN@■%&WHITE@■%&RESET@■%')
