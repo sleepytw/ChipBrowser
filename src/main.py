@@ -7,6 +7,8 @@ os.system("")
 path = os.path.dirname(os.path.abspath(__file__)) #path to file
 _ext=path.replace('src', 'ext') # path to prev parent dir
 
+_style.beautify('&BLACK@■%&RED@■%&GREEN@■%&YELLOW@■%&BLUE@■%&MAGENTA@%■&CYAN@■%&WHITE@■%&RESET@■\n%')
+
 rdata, data = (json.load(open(values)) for (_, values) in enumerate([f'{_ext}\\requests_data.json', f'{_ext}\\data.json']))
 
 def _get(
@@ -75,20 +77,17 @@ def modules(_c: list) -> ...: #_c ~ cache {initialize([]);}
 
 def get(    
     _address: tuple, #dst.address&port (if dst.ip is a domain it will convert it to ip format else ...)
+    _path: str, #/hidden.html; /ip; /search or whatever
     _proxy: tuple, #init proxy address&port (...)
 ) -> str:
+    _http=f"GET /{_path} HTTP/1.1\r\nHost: {_address[0]}\r\n{''.join(rdata['headers'])}: {''.join(rdata['headers']['User-Agent'])}\r\nConnection: keep-alive\r\nContent-Length: 0\r\n\r\n"
+    _style.beautify(f'&BRIGHT@%&LIGHTGREEN_EX@[SEND]\n%&RESET@%&LIGHTRED_EX@{_http}%&RESET@%')
     sock=socket.socket(socket.AF_INET, socket.SOCK_STREAM); #-- HTTP onto TCP/IP
     sock.connect(_proxy);
-    sock.sendall(f"""
-        GET / HTTP/1.1\r\n
-        Host: {_address[0]}\r\n
-        {''.join(rdata['headers'])}: {''.join(rdata['headers']['User-Agent'])}\r\n
-        Connection: keep-alive\r\n
-        Content-Length: 0\r\n\r\n
-    """.encode())
-    response=sock.recv(4096)
+    sock.sendall(_http.encode())
+    response=sock.recv(8192)
     sock.close()
-    return _style.beautify(f'&CYAN@{response.decode()}%&RESET@%')
+    return _style.beautify(f'&BRIGHT@%&LIGHTGREEN_EX@[RECV]\n%&RESET@%&CYAN@{response.decode()}%&RESET@%')
 
     #Connection: keep-alive\r\n #HTTP/1.1 default behaviour, but "close" can be used to mimic the HTTP/1.0 behaviour
 
@@ -108,13 +107,12 @@ def get(
     its kinda not very safe hhaha xD
     '''
 
-response=get(('http://httpbin.org/ip', 80), ('51.91.157.66', 80))
-#print(response)
+response=get(('httpbin.org', 80), '/ip', ('103.117.192.14', 80))
 
 def post(
     _address: tuple, #dst.address&port (if dst.ip is a domain it will convert it to ip format else ...)
     _proxy: tuple, #init proxy address&port
-) -> str: 
+) -> str:
     ...
 
 '''
@@ -127,3 +125,5 @@ def _pseudo(
     _address: ...,
     _proxy: ...
     ) -> None: socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((..., ...)); #-- HTTP onto TCP/IP
+
+input()
