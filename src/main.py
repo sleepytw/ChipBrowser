@@ -26,7 +26,7 @@ def _get(
     _verify: ...,
     _cert: ...,
     _json: ...
-) -> "GET":  return [bool(type(_u16)) for _u16 in locals().values()]
+) -> str:  return [bool(type(_u16)) for _u16 in locals().values()]
 
 def _post(
     _requirements: ...,
@@ -45,7 +45,7 @@ def _post(
     _stream: ...,
     _verify: ...,
     _cert: ...,
-) -> "POST": return [bool(type(_u15)) for _u15 in locals().values()]
+) -> str: return [bool(type(_u15)) for _u15 in locals().values()]
 
 '''/ bool.check to make sure that the requirements are the same as the ones given after initial execution but idk might not need it will see/'''
 
@@ -66,7 +66,7 @@ def validate(file, _cache='__ERROR') -> locals():
 def modules(_c: list) -> ...: #_c ~ cache {initialize([]);}
     try:
         for _m in data['modules']:
-            if validate(_m): _c.append(_m);
+            if validate(_m): _c.append(_m)
             else: globals()[_m] = importlib.import_module(_m); #-> also make it list all functions and desc or wahtever the fuck
         if len(_c)!=0: raise EmptyException
         else: return None
@@ -76,7 +76,7 @@ def modules(_c: list) -> ...: #_c ~ cache {initialize([]);}
 def get(    
     _address: tuple, #dst.address&port (if dst.ip is a domain it will convert it to ip format else ...)
     _proxy: tuple, #init proxy address&port (...)
-) -> "GET":
+) -> str:
     sock=socket.socket(socket.AF_INET, socket.SOCK_STREAM); #-- HTTP onto TCP/IP
     sock.connect(_proxy);
     sock.sendall(f"""
@@ -92,7 +92,7 @@ def get(
 
     #Connection: keep-alive\r\n #HTTP/1.1 default behaviour, but "close" can be used to mimic the HTTP/1.0 behaviour
 
-    _ALTERNATIVE= "{socket.gethostbyname(_address[0]) if (_address[0]==str() and \
+    __ALTERNATIVE__= "{socket.gethostbyname(_address[0]) if (_address[0]==str() and \
     ('www' or 'http://' or 'https://') in _address[0]) \
     else _address[0]}:{_address[1]}\r\n"
 
@@ -114,7 +114,7 @@ response=get(('http://httpbin.org/ip', 80), ('51.91.157.66', 80))
 def post(
     _address: tuple, #dst.address&port (if dst.ip is a domain it will convert it to ip format else ...)
     _proxy: tuple, #init proxy address&port
-) -> "POST": 
+) -> str: 
     ...
 
 '''
