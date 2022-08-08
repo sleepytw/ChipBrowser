@@ -4,6 +4,15 @@ from json_dump import *
 class EmptyException(Exception): pass
 os.system("")
 
+'''
+TODO:
+-> POST REQUESTS (AUTH/2, COOKIES ETC)
+-> parse http headers received and spit them into .text(); .content(); .headers() etc
+-> redirect site detection (from scratch)
+-> http to https conn compatibility {being able to connect to https sites whilst sending http requests} (from scratch) POST & GET
+-> proxy E2EE encryption (from scratch)
+'''
+
 path = os.path.dirname(os.path.abspath(__file__)) #path to file
 _ext=path.replace('src', 'ext') # path to prev parent dir
 
@@ -107,7 +116,7 @@ def get(
     its kinda not very safe hhaha xD
     '''
 
-response=get(('httpbin.org', 80), '/ip', ('103.117.192.14', 80))
+response=get(('httpbin.org', 80), 'get', ('103.117.192.14', 80))
 
 def post(
     _address: tuple, #dst.address&port (if dst.ip is a domain it will convert it to ip format else ...)
