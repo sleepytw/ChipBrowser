@@ -87,9 +87,10 @@ def modules(_c: list) -> ...: #_c ~ cache {initialize([]);}
 def get(    
     _address: tuple, #dst.address&port (if dst.ip is a domain it will convert it to ip format else ...)
     _path: str, #/hidden.html; /ip; /search or whatever
+    _cookie: str,
     _proxy: tuple, #init proxy address&port (...)
 ) -> str:
-    _http=f"GET /{_path} HTTP/1.1\r\nHost: {_address[0]}\r\n{''.join(rdata['headers'])}: {''.join(rdata['headers']['User-Agent'])}\r\nConnection: keep-alive\r\nContent-Length: 0\r\n\r\n"
+    _http=f"GET /{_path} HTTP/1.1\r\nHost: {_address[0]}\r\n{''.join(rdata['headers'])}: {''.join(rdata['headers']['User-Agent'])}\r\nConnection: keep-alive\r\nCookie: {_cookie}\r\nContent-Length: {len(_cookie)}\r\n\r\n"
     _style.beautify(f'&BRIGHT@%&LIGHTGREEN_EX@[SEND]\n%&RESET@%&LIGHTRED_EX@{_http}%&RESET@%')
     sock=socket.socket(socket.AF_INET, socket.SOCK_STREAM); #-- HTTP onto TCP/IP
     sock.connect(_proxy);
@@ -116,13 +117,25 @@ def get(
     its kinda not very safe hhaha xD
     '''
 
-response=get(('httpbin.org', 80), 'get', ('103.117.192.14', 80))
+response=get(('testphp.vulnweb.com', 80), 'login.php', 'login=test%2Ftest', ('103.117.192.14', 80))
 
 def post(
     _address: tuple, #dst.address&port (if dst.ip is a domain it will convert it to ip format else ...)
+    _path: str,
+    _cookie: str,
+    _auth: str,
     _proxy: tuple, #init proxy address&port
 ) -> str:
-    ...
+    _http=f"POST /{_path} HTTP/1.1\r\nHost: {_address[0]}\r\n{''.join(rdata['headers'])}: {''.join(rdata['headers']['User-Agent'])}\r\nConnection: keep-alive\r\nCookie: {_cookie}\r\nContent-Length: {len(_cookie)}\r\n\r\n"
+    _style.beautify(f'&BRIGHT@%&LIGHTGREEN_EX@[SEND]\n%&RESET@%&LIGHTRED_EX@{_http}%&RESET@%')
+    sock=socket.socket(socket.AF_INET, socket.SOCK_STREAM); #-- HTTP onto TCP/IP
+    sock.connect(_proxy);
+    sock.sendall(_http.encode())
+    response=sock.recv(8192)
+    sock.close()
+    return _style.beautify(f'&BRIGHT@%&LIGHTGREEN_EX@[RECV]\n%&RESET@%&CYAN@{response.decode()}%&RESET@%')
+
+post(('testphp.vulnweb.com', 80), 'login.php', 'login=test%2Ftest', ..., ('103.117.192.14', 80))
 
 '''
 relation ->
@@ -134,5 +147,3 @@ def _pseudo(
     _address: ...,
     _proxy: ...
     ) -> None: socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((..., ...)); #-- HTTP onto TCP/IP
-
-input()
