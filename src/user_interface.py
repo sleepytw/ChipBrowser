@@ -4,7 +4,7 @@ from threading import Thread
 
 class wm_geometry:
     def __init__(self, width, height):
-        self.width, self.height = width, height #width and height in columns & rows
+        self.width, self.height = width, height #width & height in columns & rows
 
 '''
 could be used dynamically by initializing a __new__ class everytime the scale changes(dimensions)
@@ -19,9 +19,9 @@ def _center(format:str, string:str):
 def _wrap(string, **kwargs):
     try:
         width, height = kwargs['width'], kwargs['height']
-        print(f'{"":<1}{"-"*(width-2):<{width-4}}\n{"":<1}|{_center(" "*(width-9), string):<{width-4}}|')
+        print(f'{"":<1}{"_"*(width-2):<{width-4}}\n{"":<1}|{_center(" "*(width-9), string):<{width-4}}|')
         for _ in range(height-4): print(f'{"":<1}|{" "*(width-9):<{width-4}}|')
-    finally: print(f'{"":<1}{"-"*(width-2):<{width-4}}')
+    finally: print(f'{"":<1}{"_"*(width-2):<{width-4}}')
 
 def _detect() -> ...:
     geometry=wm_geometry(_size().columns, _size().lines)
