@@ -76,7 +76,7 @@ def end_index(_string: str): return [_i for (_i, _) in enumerate(_string) if _==
 def str_index(_string: str): return [_i for (_i, _) in enumerate(_string) if _=='%']
 
 class Colorize:
-    def beautify(self, _line: str) -> ...:
+    def beautify(self, _line: str) -> str:
         '''
         When using the multiline, u have to index the position for the next color
         example: &1hello&2world
@@ -103,4 +103,4 @@ class Colorize:
         
 
 _style=Colorize()
-_style.beautify('&BLACK@■%&RED@■%&GREEN@■%&YELLOW@■%&BLUE@■%&MAGENTA@%■&CYAN@■%&WHITE@■%&RESET@■%')
+#_style.beautify('&BLACK@■%&RED@■%&GREEN@■%&YELLOW@■%&BLUE@■%&MAGENTA@%■&CYAN@■%&WHITE@■%&RESET@■%')

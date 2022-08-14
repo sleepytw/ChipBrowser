@@ -2,6 +2,7 @@ from pyautogui import size
 from msvcrt import getwch
 from os import system, path, get_terminal_size as _size
 from threading import Thread
+from color_interpreter import _style
 
 _abs_ = path.dirname(path.abspath(__file__)) #path to file
 
@@ -31,19 +32,19 @@ def _center(format:str, string:str):
 
 def _wrap(string, **kwargs):
     offset=len(string)
-    if offset!=4: 
+    if offset<4: 
         while offset!=4: offset+=1
     try:
         width, height = kwargs['width'], kwargs['height']
         print(f'{"":<1}{"_"*(width-2):<{width-4}}\n{"":<1}|{_center(" "*(width-offset-2), string):<{width-4}}|')
-        for _ in range(height-4): print(f'{"":<1}|{" "*(width-offset-2):<{width-4}}|')
-    finally: print(f'{"":<1}{"_"*(width-2):<{width-4}}')
+        for _ in range(height-6): print(f'{"":<1}|{" "*(width-offset-2):<{width-4}}|')
+    finally: print(f'{"":<1}{"_"*(width-2):<{width-4}}'); _style.beautify('&BLACK@■%&RED@■%&GREEN@■%&YELLOW@■%&BLUE@■%&MAGENTA@%■&CYAN@■%&WHITE@■%&RESET@■   Chip Browser © 2022%')
 
-def _dimensions() -> ...:
+def _dimensions(_string) -> ...:
     geometry=object.__new__(wm_geometry, _size().columns, _size().lines)
     geometry.__init__(_size().columns, _size().lines)
     width=geometry.__dict__['width']; height=geometry.__dict__['height']
-    _wrap('A', **geometry.__dict__)
+    _wrap(_string, **geometry.__dict__)
     while True:
         geometry=object.__new__(wm_geometry, _size().columns, _size().lines)
         geometry.__init__(_size().columns, _size().lines)
@@ -51,12 +52,12 @@ def _dimensions() -> ...:
         __height__, height = height, geometry.__dict__['height']
         if width!=__width__ or height!=__height__:
             system('cls')
-            _wrap('A', **geometry.__dict__)
+            _wrap(_string, **geometry.__dict__)
 
 
 def _keydetection() -> ...: 
     while True: system('taskkill /f /im python.exe') if getwch()==chr(17) else None #chr(17) = &CTRL-Q
             
 
-detection=Thread(target=_dimensions); detection.start()
+detection=Thread(target=_dimensions, args=('Main Page',)); detection.start()
 keydetection=Thread(target=_keydetection); keydetection.start()
