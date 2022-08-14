@@ -3,8 +3,7 @@ from os import system, get_terminal_size as _size
 from threading import Thread
 
 class wm_geometry:
-    def __init__(self, width, height):
-        self.width, self.height = width, height #width & height in columns & rows
+    def __init__(self, width, height): self.width, self.height = width, height #width & height in columns & rows
 
 '''
 could be used dynamically by initializing a __new__ class everytime the scale changes(dimensions)
