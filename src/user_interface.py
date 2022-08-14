@@ -18,8 +18,8 @@ def _center(format:str, string:str):
 def _wrap(string, **kwargs):
     try:
         width, height = kwargs['width'], kwargs['height']
-        print(f'{"":<1}{"_"*(width-2):<{width-4}}\n{"":<1}|{_center(" "*(width-9), string):<{width-4}}|')
-        for _ in range(height-4): print(f'{"":<1}|{" "*(width-9):<{width-4}}|')
+        print(f'{"":<1}{"_"*(width-2):<{width-4}}\n{"":<1}|{_center(" "*(width-len(string)), string):<{width-4}}|')
+        for _ in range(height-4): print(f'{"":<1}|{" "*(width-len(string)):<{width-4}}|')
     finally: print(f'{"":<1}{"_"*(width-2):<{width-4}}')
 
 def _detect() -> ...:
@@ -27,7 +27,7 @@ def _detect() -> ...:
     geometry=object.__new__(wm_geometry, _size().columns, _size().lines)
     geometry.__init__(_size().columns, _size().lines)
     width=geometry.__dict__['width']; height=geometry.__dict__['height']
-    _wrap('TITLE', **geometry.__dict__)
+    _wrap('AXI IS THE BIGGEST NOOB EVER HAHAHAHAHA', **geometry.__dict__)
     while True:
         geometry=wm_geometry(_size().columns, _size().lines)
         geometry=object.__new__(wm_geometry, _size().columns, _size().lines)
@@ -36,6 +36,6 @@ def _detect() -> ...:
         __height__, height = height, geometry.__dict__['height']
         if width!=__width__ or height!=__height__:
             system('cls')
-            _wrap('TITLE', **geometry.__dict__)
+            _wrap('AXI IS THE BIGGEST NOOB EVER HAHAHAHAHA', **geometry.__dict__)
 
 detection=Thread(target=_detect); detection.start()
