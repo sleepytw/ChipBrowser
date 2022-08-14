@@ -6,7 +6,7 @@ ANSI DETAILED DESCRIPTION ->
 import os
 os.system("")
 
-class IliterateMonkey(Exception): pass
+class IlliterateMonkey(Exception): pass
 
 CSI = '\033[' # Control Sequence Introducer: sequence starting with ESC [ or CSI (\x9B)
 
@@ -93,8 +93,8 @@ class Colorize:
                 if _line[_k+1:_v] in vars(Fore): colors.update({f'Fore.{_line[_k+1:_v]}': ''})
                 elif _line[_k+1:_v] in vars(Back): colors.update({f'Back.{_line[_k+1:_v]}': ''})
                 elif _line[_k+1:_v] in vars(Style): colors.update({f'Style.{_line[_k+1:_v]}': ''})
-                else: raise IliterateMonkey
-            except IliterateMonkey:
+                else: raise IlliterateMonkey
+            except IlliterateMonkey:
                 print('Non-existant given value by your dumbass in the database.')
 
         __operand__=list(zip(colors, [f'"""{_line[_p+1:_i]}"""' for _p, _i in _str.items()]))
