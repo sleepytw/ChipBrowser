@@ -17,6 +17,11 @@ works by offesting a value from globals() by deriving the scale values from the 
 i fear it might be a little slow tho xd will see cba
 '''
 
+class ASCII_TABLE():
+    CTRL_Q=chr(17)
+
+ascii=ASCII_TABLE()
+
 class HTML_INTERPRETER:
     def __new__(cls, *args, **kwargs) -> ...: ...
     def __init__(self) -> ...: ...
@@ -56,7 +61,7 @@ def _dimensions(_string) -> ...:
 
 
 def _keydetection() -> ...: 
-    while True: system('taskkill /f /im python.exe') if getwch()==chr(17) else None #chr(17) = &CTRL-Q
+    while True: system('taskkill /f /im python.exe') if getwch()==ascii.CTRL_Q else None #chr(17) = &CTRL-Q
             
 
 detection=Thread(target=_dimensions, args=('Main Page',)); detection.start()
