@@ -32,12 +32,18 @@ class _DECIPHER(object):
                 value=getattr(self, char)
                 setattr(self, char, _transf(value))
 
+'''
+_DECIPHER (AUTO):
+-exclude all list/dicts/etc unless converted
+-initiate the object -> ex: ascii=ASCII_TABLE(); otherwise u can use chr(var) when converting manually
+'''
+
 
 class ASCII_TABLE(_DECIPHER):
     characters={}
     for _, _v in enumerate('!"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~'):
         characters[_v] = ord(_v)
-    CTRL_Q=17 #kill switch (exit) manual: chr(17)
+    CTRL_Q=chr(17) #kill switch (exit) manual: chr(17) -> a little dangerous cuz threading is lil hard on the memory but python makes sure it bins everythign so we fine :D 
 
 
 class HTML_INTERPRETER:
@@ -81,9 +87,9 @@ def _dimensions(_string) -> _exec('Main Page'):
 
 
 def _keydetection(ascii:object) -> ...:
-    while True: 
+    while True:
         system('taskkill /f /im python.exe') if getwch()==ascii.CTRL_Q else None
-        system('echo BATCH API ~1.') if getwch()==chr(ascii.characters['f']) else None
+        system('echo batch api test') if getwch()==chr(ascii.characters['f']) else None
 
 detection=Thread(target=_dimensions, args=('Main Page',)); detection.start()
 keydetection=Thread(target=_keydetection, args=(ASCII_TABLE,)); keydetection.start()
