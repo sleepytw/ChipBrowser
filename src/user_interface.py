@@ -1,5 +1,7 @@
 from __future__ import print_function
+from glob import glob
 from os import system, path, get_terminal_size as _size
+from abc import abstractmethod
 import re
 import sys
 
@@ -15,20 +17,27 @@ from requestslib3 import get, post
 
 class InsufficientError(Exception): ...
 
-url='httpbin.org'; port=80; _path='ip'
-response=re.split('\r\n',get((url, port), _path, ('103.117.192.14', 80)))
-if url=='httpbin.org' and (_path=='ip' or _path=='get'):
-    for _i in response[-1].split('\n'): response.append(_i.strip())
-    if _path=='ip': del response[-5]
-    elif _path=='get':
-        del response[-16]
-
-
 def _title(attr:str)->...: return system(f'TITLE {attr}')
 def _icon(arg=None)->...: return None
 def _transf(code): return chr(code) #manually set a variable for detection derived from the characters dict; EX: chr(ascii.characters['key'])
 
-__ASSETS__=['_title("Chip Browser")', '_icon()', '_screen.set(1920, 1080)', 'system(f"mode {width+1}, {height+1}")']
+__ASSETS__=['_title("Chip Browser")', '_icon()', '_screen.set(1920, 1080)', '_screen.fullscreen()']
+
+class conn_establish(object):
+    @classmethod
+    def http(self, url:str, port:int, path:str, proxy:str='103.117.192.14') -> ...:
+        global _url, _port, _path, _proxy, response
+        _url, _port, _path, _proxy, response=url, port, path, proxy, []
+        init_response=re.split('\r\n', get((url, port), path, (proxy, port)))
+        for _i, _ in enumerate(init_response):
+            for _j in init_response[_i].split('\n'):
+                response.append(_j.strip())
+        return response
+
+    @abstractmethod
+    def http_to_https(_: ...) -> ...: ...
+
+conn_establish.http(url='httpbin.org', port=80, path='/get')
 
 class LOAD_ASSETS(object):
     numbers=[x*5 for x in range(2000, 3000)]
@@ -42,6 +51,18 @@ class LOAD_ASSETS(object):
             print(Fore.CYAN+'\n\n[LOADED ASSETS]'+Fore.RESET)
             for _i, _x in enumerate(__ASSETS__): print(Fore.WHITE+f'-> {_x}')
             print(Fore.RESET+'')
+    
+    @classmethod
+    def search_bar(cls, text:str):
+        print(text, end='')
+        string=""
+        while True:
+            symbol=getwch() 
+            if symbol=='\n' or '\r': break
+            print(symbol, end='', flush=True)
+            string+=symbol
+        print()
+        return string
 
 
 class wm_geometry:
@@ -58,7 +79,20 @@ class _screen(object):
         '''
 
         if sys.platform == 'win32': cls._win32_set(width, height, depth)
-        elif sys.platform.startswith('linux'): cls._linux_set(width, height, depth)        
+        elif sys.platform.startswith('linux'): cls._linux_set(width, height, depth)  
+
+    @classmethod
+    def fullscreen(cls):
+        import ctypes
+
+        kernel32 = ctypes.WinDLL('kernel32')
+        user32 = ctypes.WinDLL('user32')
+
+        SW_MAXIMIZE = 3
+
+        hWnd = kernel32.GetConsoleWindow()
+        user32.ShowWindow(hWnd, SW_MAXIMIZE)
+
 
     @staticmethod
     def _win32_get():
@@ -214,8 +248,8 @@ def display(
             try:
                 if len(offsets)==len(_attr):
                     print(f'{"":<1}|{" "*(width-max(offsets.values())-2):<{width-4}}|')
-                    for _i in [f'WEBSITE: {url}/{_path}, PORT: {port}', 'SPACE']: 
-                        display_single(_attr=_i, _centered=True, _offset_multi=None, _width=width, _height=height, kwargs=None); _index+=1
+                    for _x in [f'WEBSITE: {_url}{_path}, PORT: {_port}, PROXY: {_proxy}', 'SPACE']: 
+                        display_single(_attr=_x, _centered=True, _offset_multi=None, _width=width, _height=height, kwargs=None); _index+=1
                     for _k, offset in enumerate(offsets.values()):
                         if bool(_centered): print(f'{"":<1}|{_center(" "*(width-offset-2), _attr[_k]):<{width-4}}|'); _index+=1
                         else: print(f'{"":<1}|{"":<2}{_attr[_k]:<{width-6}}|'); _index+=1
@@ -249,6 +283,7 @@ def _main(_string) -> _load(**geometry.__dict__):
 def _keydetection(ascii:object) -> ...:
     while True:
         system('taskkill /f /im python.exe') if getwch()==ascii.CTRL_Q else None
+        ... if getwch()==chr(ascii.characters['/']) else None
 
 
 main=Thread(target=_main, args=(response,)); main.start()

@@ -1,4 +1,5 @@
 import json, os, importlib, socket
+from abc import ABC, abstractmethod
 
 from color_interpreter import Fore, Back, Style, _style
 from json_dump import *
@@ -23,69 +24,60 @@ _ext=path.replace('src', 'ext') # path to prev parent dir
 
 rdata, data = (json.load(open(values)) for (_, values) in enumerate([f'{_ext}\\requests_data.json', f'{_ext}\\data.json']))
 
-def _get(
-    _requirements: ...,
-    _url: ...,
-    _params: ...,
-    _data: ...,
-    _headers: ...,
-    _cookies: ...,
-    _files: ...,
-    _auth: ...,
-    _timeout: ...,
-    _allow_redirects: ...,
-    _proxies: ...,
-    _hooks: ...,
-    _stream: ...,
-    _verify: ...,
-    _cert: ...,
-    _json: ...
-) -> str:  return [bool(type(_u16)) for _u16 in locals().values()]
+class http_definition(ABC):
+    @abstractmethod
+    def _get(
+        _requirements: ...,
+        _url: ...,
+        _params: ...,
+        _data: ...,
+        _headers: ...,
+        _cookies: ...,
+        _files: ...,
+        _auth: ...,
+        _timeout: ...,
+        _allow_redirects: ...,
+        _proxies: ...,
+        _hooks: ...,
+        _stream: ...,
+        _verify: ...,
+        _cert: ...,
+        _json: ...
+    ) -> str:  return [bool(type(_u16)) for _u16 in locals().values()]
 
-def _post(
-    _requirements: ...,
-    _url: ...,
-    _data: ...,
-    _json: ...,
-    _params: ...,
-    _headers: ...,
-    _cookies: ...,
-    _files: ...,
-    _auth: ...,
-    _timeout: ...,
-    _allow_redirects: ...,
-    _proxies: ...,
-    _hooks: ...,
-    _stream: ...,
-    _verify: ...,
-    _cert: ...,
-) -> str: return [bool(type(_u15)) for _u15 in locals().values()]
+    @abstractmethod
+    def _post(
+        _requirements: ...,
+        _url: ...,
+        _data: ...,
+        _json: ...,
+        _params: ...,
+        _headers: ...,
+        _cookies: ...,
+        _files: ...,
+        _auth: ...,
+        _timeout: ...,
+        _allow_redirects: ...,
+        _proxies: ...,
+        _hooks: ...,
+        _stream: ...,
+        _verify: ...,
+        _cert: ...,
+    ) -> str: return [bool(type(_u15)) for _u15 in locals().values()]
 
-'''/ bool.check to make sure that the requirements are the same as the ones given after initial execution but idk might not need it will see/'''
+    '''/ bool.check to make sure that the requirements are the same as the ones given after initial execution but idk might not need it will see/'''
 
-def _http(
-    _method: str, #"POST" | "GET"
-    _path: str, #/hidden.html
-    _version: str, #"HTTP /1.0" | "HTTP /1.1"
-    _host: str, #localhost:8000
-    _agent: dict, #globals()[data]['headers'],
-    _connection: str,
-    _contentLength: int
-) -> None: return [bool(type(_u6)) for _u6 in locals().values()] #def of a get&post req params after http parsing
+    @abstractmethod
+    def _http(
+        _method: str, #"POST" | "GET"
+        _path: str, #/hidden.html
+        _version: str, #"HTTP /1.0" | "HTTP /1.1"
+        _host: str, #localhost:8000
+        _agent: dict, #globals()[data]['headers'],
+        _connection: str,
+        _contentLength: int
+    ) -> None: return [bool(type(_u6)) for _u6 in locals().values()] #def of a get&post req params after http parsing
 
-def validate(file, _cache='__ERROR') -> locals():
-    """ Check if file is empty by confirming if its size is 0 bytes"""
-    return os.path.exists(f'{file}.py') and os.stat(f'{file}.py').st_size == 0
-
-def modules(_c: list) -> ...: #_c ~ cache {initialize([]);}
-    try:
-        for _m in data['modules']:
-            if validate(_m): _c.append(_m)
-            else: globals()[_m] = importlib.import_module(_m); #-> also make it list all functions and desc or wahtever the fuck
-        if len(_c)!=0: raise EmptyException
-        else: return None
-    except EmptyException:
-        print(f"""Unimported module/s:\n{['%s' % _i for _i in _c]}""")
 
 def get(    
     _address: tuple, #dst.address&port (if dst.ip is a domain it will convert it to ip format else ...)
