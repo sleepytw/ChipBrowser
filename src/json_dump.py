@@ -47,7 +47,13 @@ CVIOLETBG2 = '\33[105m'
 CBEIGEBG2  = '\33[106m'
 CWHITEBG2  = '\33[107m'
 
-_dynamics={_k: _v for _k, _v in globals().items() if not _k.startswith("__") and not _k in ['json', 'os'] and not _k in ['path', '_ext']}
-with open(f'{_ext}\colors.json', 'w') as fp:
-    _dump=json.dumps(dict((_i, eval(_i)) for _i in _dynamics), default=lambda o: o.__dict__, indent=2)
+_dynamics = {
+    _k: _v
+    for _k, _v in globals().items() if not _k.startswith("__")
+    and not _k in ["json", "os"] and not _k in ["path", "_ext"]
+}
+with open(f"{_ext}\colors.json", "w") as fp:
+    _dump = json.dumps(dict((_i, eval(_i)) for _i in _dynamics),
+                       default=lambda o: o.__dict__,
+                       indent=2)
     fp.write(_dump)

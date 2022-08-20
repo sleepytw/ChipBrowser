@@ -1,5 +1,5 @@
 {
-	"__cache__": "https://www.freeproxylists.net",
+    "__cache__": "https://www.freeproxylists.net",
     "conns": [
         "https://httpbin.org/ip"
     ],
@@ -7,8 +7,7 @@
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36"
     },
     "proxies": {
-		"https": [],
-		"sock5": []
-	}
+        "https": [],
+        "sock5": []
+    }
 }
-
