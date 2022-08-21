@@ -59,6 +59,7 @@ def _transf(code):
 
 
 EasterEgg  = False
+
 __ASSETS__ = [
     'asyncio.run(_title("Chip Browser"))',
     "asyncio.run(_icon())",
@@ -150,41 +151,18 @@ def Background():
 
 
     columns, rows = get_terminal_size()
-    rows-=5
-
-
-    def clear_screen(numlines=100):
-        """Clear the console.
-        numlines is an optional argument used only as a fall-back.
-        """
-        print(Style.RESET_ALL)
-
-        if os.name == "posix":
-            # Unix/Linux/MacOS/BSD/etc
-            os.system("clear")
-        elif os.name in ("nt", "dos", "ce"):
-            # DOS/Windows
-            os.system("cls")
-        else:
-            # Fallback for other operating systems.
-            print("\n" * rows)
+    rows-=3
 
 
     def get_random_flake():
-        start = 10048
-        end = 10056
-        options = list(range(start, end))
-
-        if platform.system() == "Windows":
-            # Windows prints a green background on 10055
-            # for some reason. It also makes 52 blue?
-            options.remove(10052)
-            options.remove(10055)
         try:
-            flake = chr(random.choice(options))
+            flake = random.choice([u' ❄', u' ❅', u' ❆'])
 
-            return flake
-        except:
+            if flake is not None:
+                return flake
+            else: 
+                raise UnicodeError
+        except UnicodeError: 
             pass
 
         return " *"
@@ -247,15 +225,16 @@ def Background():
 
 
     def random_printer(speed, particle, stack, color):
-        clear_screen()
+        system('cls')
 
         while True:
             col = random.choice(range(1, int(columns)))
 
             # Don't print snowflakes right next to each other, since
             # unicode flakes take 2 spaces
-            if col % 2 == 0:
+            if col % 2 == 0 or col in range(0, 5) or col in range(columns-5, columns):
                 continue
+
 
             # its already on the screen, move it
             if col in snowflakes.keys():
@@ -275,7 +254,7 @@ def Background():
             try:
                 sleep(final_speed)
             except KeyboardInterrupt:
-                clear_screen()
+                system('cls')
                 sys.exit(0)
 
 
@@ -510,6 +489,10 @@ def display(
         f'{"":<1}{"_"*(width-2):<{width-4}}',
         f'{"":<1}{"_"*(width-2):<{width-4}}',
     )
+    '''
+    append each line to list and maybe parse it, after maybe just maybe yk do the same as the rainbow shit again so i cna print it each iteration
+    without the snow covering the letters xD
+    '''
     if bool(EasterEgg):
         print('\n'+Fore.RESET+top)
     else:
