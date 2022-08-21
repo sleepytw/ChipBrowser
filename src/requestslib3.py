@@ -33,69 +33,78 @@ rdata, data = (
 class http_blueprints(ABC):
     @abstractmethod
     def _get(
-        _requirements: ...,
-        _url: ...,
-        _params: ...,
-        _data: ...,
-        _headers: ...,
-        _cookies: ...,
-        _files: ...,
-        _auth: ...,
-        _timeout: ...,
-        _allow_redirects: ...,
-        _proxies: ...,
-        _hooks: ...,
-        _stream: ...,
-        _verify: ...,
-        _cert: ...,
-        _json: ...,
+        _requirements    : ...,
+        _url             : ...,
+        _params          : ...,
+        _data            : ...,
+        _headers         : ...,
+        _cookies         : ...,
+        _files           : ...,
+        _auth            : ...,
+        _timeout         : ...,
+        _allow_redirects : ...,
+        _proxies         : ...,
+        _hooks           : ...,
+        _stream          : ...,
+        _verify          : ...,
+        _cert            : ...,
+        _json            : ...,
     ) -> str:
-        return [bool(type(_u16)) for _u16 in locals().values()]
+    
+        return [
+            bool(type(_u16)) for _u16 in locals().values()
+        ]
 
     @abstractmethod
     def _post(
-        _requirements: ...,
-        _url: ...,
-        _data: ...,
-        _json: ...,
-        _params: ...,
-        _headers: ...,
-        _cookies: ...,
-        _files: ...,
-        _auth: ...,
-        _timeout: ...,
-        _allow_redirects: ...,
-        _proxies: ...,
-        _hooks: ...,
-        _stream: ...,
-        _verify: ...,
-        _cert: ...,
+        _requirements    : ...,
+        _url             : ...,
+        _data            : ...,
+        _json            : ...,
+        _params          : ...,
+        _headers         : ...,
+        _cookies         : ...,
+        _files           : ...,
+        _auth            : ...,
+        _timeout         : ...,
+        _allow_redirects : ...,
+        _proxies         : ...,
+        _hooks           : ...,
+        _stream          : ...,
+        _verify          : ...,
+        _cert            : ...,
     ) -> str:
-        return [bool(type(_u15)) for _u15 in locals().values()]
+
+        return [
+            bool(type(_u15)) for _u15 in locals().values()
+        ]
+
 
     """/ bool.check to make sure that the requirements are the same as the ones given after initial execution but idk might not need it will see/"""
 
     @abstractmethod
     def _http(
-        _method: str,  # "POST" | "GET"
-        _path: str,  # /hidden.html
-        _version: str,  # "HTTP /1.0" | "HTTP /1.1"
-        _host: str,  # localhost:8000
-        _agent: dict,  # globals()[data]['headers'],
-        _connection: str,
-        _contentLength: int,
+        _method        : str,  # "POST" | "GET"
+        _path          : str,  # /hidden.html
+        _version       : str,  # "HTTP /1.0" | "HTTP /1.1"
+        _host          : str,  # localhost:8000
+        _agent         : dict,  # globals()[data]['headers'],
+        _connection    : str,
+        _contentLength : int,
     ) -> None:
+
         return [
             bool(type(_u6)) for _u6 in locals().values()
         ]  # def of a get&post req params after http parsing
 
 
 def get(
-    _address: tuple,  # dst.address&port (if dst.ip is a domain it will convert it to ip format else ...)
-    _path: str,  # /hidden.html; /ip; /search or whatever
-    # _cookie: str,
-    _proxy: tuple,  # init proxy address&port (...)
+    _address  : tuple,  # dst.address&port (if dst.ip is a domain it will convert it to ip format else ...)
+    _path     : str,  # /hidden.html; /ip; /search or whatever
+    # _cookie : str,
+    _proxy    : tuple,  # init proxy address&port (...)
 ) -> str:
+
     _http = f"GET /{_path} HTTP/1.1\r\nHost: {_address[0]}\r\n{''.join(rdata['headers'])}: {''.join(rdata['headers']['User-Agent'])}\r\nConnection: keep-alive\r\n\r\n"
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # -- HTTP onto TCP/IP
@@ -124,12 +133,13 @@ def get(
 
 
 def post(
-    _address: tuple,  # dst.address&port (if dst.ip is a domain it will convert it to ip format else ...)
-    _path: str,
-    _cookie: str,
-    _auth: str,
-    _proxy: tuple,  # init proxy address&port
+    _address : tuple,  # dst.address&port (if dst.ip is a domain it will convert it to ip format else ...)
+    _path    : str,
+    _cookie  : str,
+    _auth    : str,
+    _proxy   : tuple,  # init proxy address&port
 ) -> str:
+
     _http = f"POST /{_path} HTTP/1.1\r\nHost: {_address[0]}\r\n{''.join(rdata['headers'])}: {''.join(rdata['headers']['User-Agent'])}\r\nConnection: keep-alive\r\nCookie: {_cookie}\r\nContent-Length: {len(_cookie)}\r\n\r\n"
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # -- HTTP onto TCP/IP
@@ -155,6 +165,10 @@ method; url; param; content-length; cookies; auth; verify; action within the bro
 """
 
 
-def _pseudo(_address: ..., _proxy: ...) -> None:
+def _pseudo(
+    _address : ..., 
+    _proxy   : ...
+) -> None:
+
     socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((..., ...))
     # -- HTTP onto TCP/IP

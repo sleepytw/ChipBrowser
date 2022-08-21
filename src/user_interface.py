@@ -20,11 +20,11 @@ class InsufficientError(Exception):
     ...
 
 
-async def _title(attr: str) -> ...:
+async def _title(attr: str) ->...:
     return ctypes.windll.kernel32.SetConsoleTitleW("Chip Browser")
 
 
-async def _icon(arg=None) -> ...:
+async def _icon(arg: None=None) ->...:
     return None
 
 
@@ -47,7 +47,14 @@ class conn_establish(object):
     # Therefore if the response is scuffed/ straight up gives an error for unicodedecode, just change the proxy to 127.0.0.1 which would resolve the issue
     # One caveat is that ur no longer hidden in terms of ur ip so um take ur chances ig :P
     @classmethod
-    def http(self, url: str, port: int, path: str, proxy: str) -> ...:
+    def http(
+        self, 
+        url   : str, 
+        port  : int,
+        path  : str, 
+        proxy : str
+    ) -> list:
+
         global _url, _port, _path, _proxy, response
         _url, _port, _path, _proxy, response = url, port, path, proxy, []
         init_response = re.split("\r\n", get((url, port), path, (proxy, port)))
@@ -56,15 +63,21 @@ class conn_establish(object):
                 response.append(_j.strip())
         return response
 
-    @abstractmethod.__eq__
-    def http_to_https(_: ...) -> ...:
+    @abstractmethod
+    def http_to_https(_: ...) ->...:
         return _  # integrated into requestslib3 already
 
 
-conn_establish.http(url="httpbin.org", port=80, path="/get", proxy="103.117.192.14")
+conn_establish.http(
+                    url   = "httpbin.org",
+                    port  = 80,
+                    path  = "/get",
+                    proxy = "103.117.192.14"
+                )
 
 
 class LOAD_ASSETS(object):
+
     @classmethod
     def progress_bar(cls, progress, total, asset):
         percent = 100 * (progress / float(total))
@@ -92,6 +105,7 @@ class LOAD_ASSETS(object):
 
 
 class wm_geometry:
+
     def __init__(self, width, height):
         self.width, self.height = width, height  # width & height in columns & rows
 
@@ -102,8 +116,15 @@ height = geometry.__dict__["height"]
 
 
 class _screen(object):
+
     @classmethod
-    def set(cls, width=None, height=None, depth=32):
+    def set(
+        cls, 
+        width  = None, 
+        height = None, 
+        depth  = 32
+        ):
+
         """
         Set the primary display to the specified mode
         """
@@ -137,7 +158,12 @@ class _screen(object):
         return screensize
 
     @staticmethod
-    def _win32_set(width=None, height=None, depth=32):
+    def _win32_set(
+        width  = None, 
+        height = None, 
+        depth  = 32
+        ):
+
         """
         Set the primary windows display to the specified mode
         """
@@ -167,10 +193,12 @@ class _screen(object):
 
 
 class _LIMITER:
+
     def __init__(self, arg: int):
         self.arg = arg
 
     def __call__(self, func):
+
         def wrapper(*args, **kwargs):
             if not wrapper.has_run:
                 wrapper.has_run = True
@@ -207,6 +235,7 @@ class Iterators(object):
 
 
 class _DECIPHER(object):
+
     def __init__(self):
         for char in dir(self):
             if not char.startswith("_") & char == "characters":
@@ -223,11 +252,9 @@ _DECIPHER (AUTO):
 
 class ASCII_TABLE(_DECIPHER):
     characters = {}
-    for _, _v in enumerate(
-        "!\"#$%&'()*+,-./0123456789:;<=>?@ \
+    for _, _v in enumerate("!\"#$%&'()*+,-./0123456789:;<=>?@ \
                             ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_` \
-                            abcdefghijklmnopqrstuvwxyz{|}~"
-    ):
+                            abcdefghijklmnopqrstuvwxyz{|}~"):
         characters[_v] = ord(_v)
 
     CTRL_Q = chr(
@@ -236,45 +263,48 @@ class ASCII_TABLE(_DECIPHER):
 
 
 class HTML_INTERPRETER:
-    def __new__(cls, *args, **kwargs) -> ...:
+
+    def __new__(cls, *args, **kwargs) ->...:
         ...
 
-    def __init__(self, *args) -> ...:
+    def __init__(self, *args) ->...:
         ...
 
     """
-    will take the html of a page requested by the get() in requests.py
+    will take the html of a page requested by the get() in requestslib3.py
     request and will integrate it into the console ui system
     """
 
 
 async def rainbow(text: str):
     # just a dream honestly
-    # tried everything in the world this shit doesnt wanna run properly outta my face
+    # tried everything in the world this shit doesnt wanna run properly kinda depressing
     while True:
         for i in range(0, 16):
             for j in range(0, 16):
-                sys.stdout.write(
-                    "\u001b[38;5;" + str(i * 16 + j) + "m " + f"{text}\r"
-                    )
+                sys.stdout.write("\u001b[38;5;" + str(i * 16 + j) + "m " +
+                                f"{text}\r")
                 sys.stdout.flush()
                 sleep(0.0001)
 
 
-def _center(format: str, string: str):
+def _center(
+    format : str, 
+    string : str
+    ):
     center = int(len(format) / 2)
     return (
-        format[: center + 6] + string + format[center + len(string) :]
+        format[:center + 6] + string + format[center + len(string):]
     )  # color -> f'{Fore.COLOR+string+Fore.RESET}'
 
 
 def display_single(
-    _attr: str,
-    _offset_multi: int or None,
-    _centered: bool,
-    _width: int or None,
-    _height: int or None,
-    **kwargs: dict or None,
+    _attr         : str,
+    _offset_multi : int or None,
+    _centered     : bool,
+    _width        : int or None,
+    _height       : int or None,
+    **kwargs      : dict or None,
 ):
 
     if kwargs != None and (_width and _height == None):
@@ -300,19 +330,20 @@ def display_single(
     if isinstance(_centered, bool) and _centered is False and _attr != "SPACE":
         print(f'{"":<1}|{"":<2}{_attr:<{width-6}}|')
 
-    elif isinstance(_centered, bool) and _centered is True and _attr != "SPACE":
+    elif isinstance(_centered,
+                    bool) and _centered is True and _attr != "SPACE":
         print(
             f'{"":<1}|{_center(" "*(width-offset-2), _attr):<{width-4+len(Fore.CYAN)+(len(Effect.BOLD)+len(Effect.UNDERLINE)+len(Effect.RESET)) if Effect.BOLD and Effect.UNDERLINE and Effect.RESET in _attr else 0}}|'
         )
 
 
 def display(
-    _attr: str or list,  # *list -> **strings
-    _centered: bool,  # y/n center
-    _index: int = 0,  # each message
-    _default: int = 6,  # default console centering
-    _last: int = 4,  # last & start
-    **kwargs: dict,  # resolution info
+        _attr     : str or list,  # *list -> **strings
+        _centered : bool,  # y/n center
+        _index    : int = 0,  # each message
+        _default  : int = 6,  # default console centering
+        _last     : int = 4,  # last & start
+        **kwargs  : dict,  # resolution info
 ):
     system("cls")
     width, height = kwargs["width"], kwargs["height"]
@@ -329,7 +360,8 @@ def display(
             if offset < 4:
                 while offset != 4:
                     offset += 1
-            print(f'{"":<1}|{_center(" "*(width-offset-2), _attr):<{width-4}}|')
+            print(
+                f'{"":<1}|{_center(" "*(width-offset-2), _attr):<{width-4}}|')
             _index += 1  # color -> :<{width-4+len(Fore.COLOR)+len(Fore.RESET)}
             for _ in range(height - _default + _index - _last):
                 print(
@@ -347,22 +379,22 @@ def display(
                             offsets[_k] += 1
             try:
                 if len(offsets) == len(_attr):
-                    print(f'{"":<1}|{" "*(width-max(offsets.values())-2):<{width-4}}|')
+                    print(
+                        f'{"":<1}|{" "*(width-max(offsets.values())-2):<{width-4}}|'
+                    )
                     for _x in [
-                        Effect.UNDERLINE
-                        + Effect.BOLD
-                        + Fore.CYAN
-                        + f"WEBSITE: {_url}{_path} ~ PORT: {_port} ~ PROXY: {_proxy}"
-                        + Effect.RESET,
-                        "SPACE",
+                            Effect.UNDERLINE + Effect.BOLD + Fore.CYAN +
+                            f"WEBSITE: {_url}{_path} ~ PORT: {_port} ~ PROXY: {_proxy}"
+                            + Effect.RESET,
+                            "SPACE",
                     ]:
                         display_single(
-                            _attr=_x,
-                            _centered=True,
-                            _offset_multi=None,
-                            _width=width,
-                            _height=height,
-                            kwargs=None,
+                            _attr         = _x,
+                            _centered     = True,
+                            _offset_multi = None,
+                            _width        = width,
+                            _height       = height,
+                            kwargs        = None,
                         )
                         _index += 1
                     for _k, offset in enumerate(offsets.values()):
@@ -409,7 +441,9 @@ def _load(**kwargs):
     system("cls")
 
 
-def _main(_string) -> _load(**geometry.__dict__):
+def _main(_string) -> _load(
+        **geometry.__dict__
+    ):
     while True:
         geometry = object.__new__(wm_geometry, _size().columns, _size().lines)
         geometry.__init__(_size().columns, _size().lines)
@@ -417,18 +451,25 @@ def _main(_string) -> _load(**geometry.__dict__):
         __height__, globals()["height"] = height, geometry.__dict__["height"]
         if width != __width__ or height != __height__:
             system("cls")
-            display(_attr=_string, _centered=False, **geometry.__dict__)
+            display(
+                _attr     = _string,
+                _centered = False, 
+                **geometry.__dict__
+            )
         else:
             del geometry
             sleep(2.2250738585072014e-308)
 
 
-def _keydetection(ascii: object) -> ...:
+def _keydetection(ascii: object) ->...:
     while True:
-        system("taskkill /f /im python.exe") if getwch() == ascii.CTRL_Q else None
+        system(
+            "taskkill /f /im python.exe") if getwch() == ascii.CTRL_Q else None
         ... if getwch() == chr(ascii.characters["/"]) else None
         # refresh upon pressing a button kinda hard tho, hvae to reiterate all vars from recepient func
 
 
-main = Thread(target=_main, args=(response,)); main.start()
-keydetection = Thread(target=_keydetection, args=(ASCII_TABLE,)); keydetection.start()
+main = Thread(target=_main, args=(response, ))
+main.start()
+keydetection = Thread(target=_keydetection, args=(ASCII_TABLE, ))
+keydetection.start()

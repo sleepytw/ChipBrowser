@@ -16,8 +16,9 @@ def _analyze(_: ...) -> None:
         headers=rdata["headers"],
         proxies=r.choice(proxies) if proxies else None,
     )
-    return response.json(
-    ) if rdata["conns"][0] == "https://httpbin.org/ip" else ...
+    return (
+        response.json() if rdata["conns"][0] == "https://httpbin.org/ip" else ...
+    )
 
 
 def _parse(_resp: _analyze(...)):
