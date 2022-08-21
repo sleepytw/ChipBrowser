@@ -1,11 +1,15 @@
 from os import system, path, get_terminal_size as _size
 from abc import abstractmethod
+import platform
 import ctypes
+import random
 import re
 import sys
+import os
 
 from pyautogui import size
 from msvcrt import getwch, putwch
+import shutil
 
 from functools import lru_cache, cache
 from threading import Thread
@@ -15,12 +19,32 @@ import asyncio
 from color_interpreter import Effect, Fore, Back, Style, _style
 from requestslib3 import get, post
 
+def rainbow(text: str):
+    # just a dream honestly
+    # tried everything in the world this shit doesnt wanna run properly kinda depressing
+    # + same with the background animation :(
+
+    # while True:
+    #     for i in range(0, 16):
+    #         for j in range(0, 16):
+    #             sys.stdout.write("\u001b[38;5;" + str(i * 16 + j) + "m " +
+    #                             f"{text}\r")
+    #             sys.stdout.flush()
+    #             sleep(0.0001)
+    while True:
+        output = f'{text}\r'
+        color_options = [color for color in vars(Fore) if color not in ["LIGHTBLACK_EX", "LIGHTWHITE_EX", "BLACK", "WHITE", "RESET"]]
+        output = getattr(Fore, random.choice(color_options).upper()) + output #f'{"":<15}'
+
+        print("\033[1;1H"+output+"\033[1;1H")
+        sleep(0.04)
+
 
 class InsufficientError(Exception):
     ...
 
 
-async def _title(attr: str) ->...:
+async def _title(attr: str=None) ->...:
     return ctypes.windll.kernel32.SetConsoleTitleW("Chip Browser")
 
 
@@ -34,11 +58,12 @@ def _transf(code):
     )  # manually set a variable for detection derived from the characters dict; EX: chr(ascii.characters['key'])
 
 
+EasterEgg  = False
 __ASSETS__ = [
     'asyncio.run(_title("Chip Browser"))',
     "asyncio.run(_icon())",
     "_screen.set(1920, 1080)",
-    "_screen.fullscreen()",
+    "_screen.fullscreen()"
 ]
 
 
@@ -65,7 +90,7 @@ class conn_establish(object):
 
     @abstractmethod
     def http_to_https(_: ...) ->...:
-        return _  # integrated into requestslib3 already
+        return  # integrated into requestslib3 already
 
 
 conn_establish.http(
@@ -107,22 +132,168 @@ class LOAD_ASSETS(object):
 class wm_geometry:
 
     def __init__(self, width, height):
-        self.width, self.height = width, height  # width & height in columns & rows
+        self.width, self.height = (
+            width, height
+            )  # width & height in columns & rows
 
 
 geometry = wm_geometry(_size().columns, _size().lines)
 width = geometry.__dict__["width"]
 height = geometry.__dict__["height"]
 
+def Background():
+    snowflakes = {}
+
+
+    def get_terminal_size():
+        return shutil.get_terminal_size()
+
+
+    columns, rows = get_terminal_size()
+    rows-=5
+
+
+    def clear_screen(numlines=100):
+        """Clear the console.
+        numlines is an optional argument used only as a fall-back.
+        """
+        print(Style.RESET_ALL)
+
+        if os.name == "posix":
+            # Unix/Linux/MacOS/BSD/etc
+            os.system("clear")
+        elif os.name in ("nt", "dos", "ce"):
+            # DOS/Windows
+            os.system("cls")
+        else:
+            # Fallback for other operating systems.
+            print("\n" * rows)
+
+
+    def get_random_flake():
+        start = 10048
+        end = 10056
+        options = list(range(start, end))
+
+        if platform.system() == "Windows":
+            # Windows prints a green background on 10055
+            # for some reason. It also makes 52 blue?
+            options.remove(10052)
+            options.remove(10055)
+        try:
+            flake = chr(random.choice(options))
+
+            return flake
+        except:
+            pass
+
+        return " *"
+
+    current_rows = {}
+
+
+    def print_col(col, color):
+        output = "\033[%s;%sH%s" % (snowflakes[col][0], col, snowflakes[col][1])
+        if color:
+            if color == "rainbow":
+                color_options = [color for color in vars(Fore) if color not in ["LIGHTBLACK_EX", "LIGHTWHITE_EX", "BLACK", "WHITE", "RESET"]]
+                output = getattr(Fore, random.choice(color_options).upper()) + output
+            else:
+                output = getattr(Fore, color.upper())
+
+        print(output)
+
+        # reset the cursor
+        print("\033[1;1H")
+
+
+    def move_flake(col, stack, particle, color):
+        # Rows is the max amount of rows on the screen,
+        # so settings the column to the rows count means
+        # putting it at the bottom of the screen
+
+        if stack == "pile":
+            if col not in current_rows:
+                current_rows[col] = rows
+
+            current_row = current_rows[col]
+
+            # The current column has reached the top of
+            # the screen, lets reset it so it drops the
+            # pile back
+            if current_row == 1:
+                current_row = rows
+                current_rows[col] = current_row
+
+            # If next row is the end, lets just move the rows up by one
+            if snowflakes[col][0] + 1 == current_row:
+                current_rows[col] -= 1
+        else:
+            current_row = rows
+
+        # If next row is the end, lets start a new snow flake
+        if snowflakes[col][0] + 1 == current_row:
+            char = particle
+            if not particle:
+                char = get_random_flake()
+            snowflakes[col] = [1, char]
+            print_col(col, color)
+        else:
+            # erase the flake in current location
+            print("\033[%s;%sH  " % (snowflakes[col][0], col))
+            # move down by one
+            snowflakes[col][0] += 1
+            print_col(col, color)
+
+
+    def random_printer(speed, particle, stack, color):
+        clear_screen()
+
+        while True:
+            col = random.choice(range(1, int(columns)))
+
+            # Don't print snowflakes right next to each other, since
+            # unicode flakes take 2 spaces
+            if col % 2 == 0:
+                continue
+
+            # its already on the screen, move it
+            if col in snowflakes.keys():
+                move_flake(col, stack, particle, color)
+            else:
+                # otherwise put it on the screen
+                flake = particle if particle else get_random_flake()
+                snowflakes[col] = [1, flake]
+                print_col(col, color)
+
+            # key any flakes on the screen moving
+            for flake in snowflakes.keys():
+                move_flake(flake, stack, particle, color)
+
+            final_speed = 1.0 / speed
+
+            try:
+                sleep(final_speed)
+            except KeyboardInterrupt:
+                clear_screen()
+                sys.exit(0)
+
+
+    def main(speed=14, stack=None, particle=None, color=None):
+        # Print all the flakes
+        # for flake in range(0x2740, 0x2749):
+        #   print(f"{flake}: {chr(flake)}")
+        random_printer(speed, particle, stack, color)
+    
+    main(color='rainbow')
 
 class _screen(object):
-
     @classmethod
     def set(
         cls, 
-        width  = None, 
-        height = None, 
-        depth  = 32
+        width  : None = None, 
+        height : None = None, 
+        depth  : int  = 32
         ):
 
         """
@@ -159,9 +330,9 @@ class _screen(object):
 
     @staticmethod
     def _win32_set(
-        width  = None, 
-        height = None, 
-        depth  = 32
+        width  : None = None, 
+        height : None = None, 
+        depth  : int  = 32
         ):
 
         """
@@ -264,6 +435,7 @@ class ASCII_TABLE(_DECIPHER):
 
 class HTML_INTERPRETER:
 
+    @classmethod
     def __new__(cls, *args, **kwargs) ->...:
         ...
 
@@ -274,19 +446,6 @@ class HTML_INTERPRETER:
     will take the html of a page requested by the get() in requestslib3.py
     request and will integrate it into the console ui system
     """
-
-
-async def rainbow(text: str):
-    # just a dream honestly
-    # tried everything in the world this shit doesnt wanna run properly kinda depressing
-    while True:
-        for i in range(0, 16):
-            for j in range(0, 16):
-                sys.stdout.write("\u001b[38;5;" + str(i * 16 + j) + "m " +
-                                f"{text}\r")
-                sys.stdout.flush()
-                sleep(0.0001)
-
 
 def _center(
     format : str, 
@@ -341,8 +500,8 @@ def display(
         _attr     : str or list,  # *list -> **strings
         _centered : bool,  # y/n center
         _index    : int = 0,  # each message
-        _default  : int = 6,  # default console centering
-        _last     : int = 4,  # last & start
+        _default  : int = 5,  # default console centering
+        _last     : int = 3,  # last & start
         **kwargs  : dict,  # resolution info
 ):
     system("cls")
@@ -351,7 +510,10 @@ def display(
         f'{"":<1}{"_"*(width-2):<{width-4}}',
         f'{"":<1}{"_"*(width-2):<{width-4}}',
     )
-    print(top)
+    if bool(EasterEgg):
+        print('\n'+Fore.RESET+top)
+    else:
+        print(top)
     _index += 1
 
     try:
@@ -445,6 +607,7 @@ def _main(_string) -> _load(
         **geometry.__dict__
     ):
     while True:
+        global width, height
         geometry = object.__new__(wm_geometry, _size().columns, _size().lines)
         geometry.__init__(_size().columns, _size().lines)
         __width__, globals()["width"] = width, geometry.__dict__["width"]
@@ -468,8 +631,11 @@ def _keydetection(ascii: object) ->...:
         ... if getwch() == chr(ascii.characters["/"]) else None
         # refresh upon pressing a button kinda hard tho, hvae to reiterate all vars from recepient func
 
-
-main = Thread(target=_main, args=(response, ))
+main = Thread(target=_main, args=(response,))
 main.start()
-keydetection = Thread(target=_keydetection, args=(ASCII_TABLE, ))
+keydetection = Thread(target=_keydetection, args=(ASCII_TABLE,))
 keydetection.start()
+if bool(EasterEgg):
+    rainbow_credits=Thread(target=rainbow, args=('-> by sleepytw xD',))
+    rainbow_credits.start()
+    Background()
