@@ -24,13 +24,6 @@ def rainbow(text: str):
     # tried everything in the world this shit doesnt wanna run properly kinda depressing
     # + same with the background animation :(
 
-    # while True:
-    #     for i in range(0, 16):
-    #         for j in range(0, 16):
-    #             sys.stdout.write("\u001b[38;5;" + str(i * 16 + j) + "m " +
-    #                             f"{text}\r")
-    #             sys.stdout.flush()
-    #             sleep(0.0001)
     while True:
         output = f'{text}\r'
         color_options = [color for color in vars(Fore) if color not in ["LIGHTBLACK_EX", "LIGHTWHITE_EX", "BLACK", "WHITE", "RESET"]]
@@ -58,7 +51,7 @@ def _transf(code):
     )  # manually set a variable for detection derived from the characters dict; EX: chr(ascii.characters['key'])
 
 
-EasterEgg  = False
+EasterEgg  = True
 
 __ASSETS__ = [
     'asyncio.run(_title("Chip Browser"))',
@@ -83,7 +76,9 @@ class conn_establish(object):
 
         global _url, _port, _path, _proxy, response
         _url, _port, _path, _proxy, response = url, port, path, proxy, []
-        init_response = re.split("\r\n", get((url, port), path, (proxy, port)))
+        init_response = re.split("\r\n", bytes(get(
+                                                    (url, port), path, (proxy, port)),
+                                                    encoding='utf-8').decode())
         for _i, _ in enumerate(init_response):
             for _j in init_response[_i].split("\n"):
                 response.append(_j.strip())
@@ -97,7 +92,7 @@ class conn_establish(object):
 conn_establish.http(
                     url   = "httpbin.org",
                     port  = 80,
-                    path  = "/get",
+                    path  = "/ip",
                     proxy = "103.117.192.14"
                 )
 
@@ -156,7 +151,9 @@ def Background():
 
     def get_random_flake():
         try:
-            flake = random.choice([u' ❄', u' ❅', u' ❆'])
+            flake = random.choice([u' ❄', 
+                                   u' ❅', 
+                                   u' ❆'])
 
             if flake is not None:
                 return flake
@@ -232,7 +229,7 @@ def Background():
 
             # Don't print snowflakes right next to each other, since
             # unicode flakes take 2 spaces
-            if col % 2 == 0 or col in range(0, 5) or col in range(columns-5, columns):
+            if col in range(0, 5) or col in range(columns-5, columns):
                 continue
 
 
@@ -401,6 +398,7 @@ _DECIPHER (AUTO):
 
 
 class ASCII_TABLE(_DECIPHER):
+    
     characters = {}
     for _, _v in enumerate("!\"#$%&'()*+,-./0123456789:;<=>?@ \
                             ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_` \
@@ -438,11 +436,11 @@ def _center(
 
 def display_single(
     _attr         : str,
-    _offset_multi : int or None,
+    _offset_multi : int   or None,
     _centered     : bool,
-    _width        : int or None,
-    _height       : int or None,
-    **kwargs      : dict or None,
+    _width        : int   or None,
+    _height       : int   or None,
+    **kwargs      : dict  or None,
 ):
 
     if kwargs != None and (_width and _height == None):
@@ -489,10 +487,12 @@ def display(
         f'{"":<1}{"_"*(width-2):<{width-4}}',
         f'{"":<1}{"_"*(width-2):<{width-4}}',
     )
+
     '''
     append each line to list and maybe parse it, after maybe just maybe yk do the same as the rainbow shit again so i cna print it each iteration
     without the snow covering the letters xD
     '''
+    
     if bool(EasterEgg):
         print('\n'+Fore.RESET+top)
     else:
@@ -607,9 +607,11 @@ def _main(_string) -> _load(
             sleep(2.2250738585072014e-308)
 
 
-def _keydetection(ascii: object) ->...:
+def _keydetection(ascii: object) -> ...:
     while True:
         system(
+
+            
             "taskkill /f /im python.exe") if getwch() == ascii.CTRL_Q else None
         ... if getwch() == chr(ascii.characters["/"]) else None
         # refresh upon pressing a button kinda hard tho, hvae to reiterate all vars from recepient func
