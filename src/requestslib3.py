@@ -51,9 +51,10 @@ class http_blueprints(ABC):
         _json            : ...,
     ) -> str:
     
-        return [
-            bool(type(_u16)) for _u16 in locals().values()
-        ]
+        return (
+            [
+                bool(type(_u16))] for _u16 in locals().values()
+            )
 
     @abstractmethod
     def _post(
@@ -75,9 +76,10 @@ class http_blueprints(ABC):
         _cert            : ...,
     ) -> str:
 
-        return [
-            bool(type(_u15)) for _u15 in locals().values()
-        ]
+        return (
+            [
+                bool(type(_u15))] for _u15 in locals().values()
+            )
 
 
     """/ bool.check to make sure that the requirements are the same as the ones given after initial execution but idk might not need it will see/"""
@@ -93,9 +95,10 @@ class http_blueprints(ABC):
         _contentLength : int,
     ) -> None:
 
-        return [
-            bool(type(_u6)) for _u6 in locals().values()
-        ]  # def of a get&post req params after http parsing
+        return (
+            [
+                bool(type(_u6))] for _u6 in locals().values()
+            ) # def of a get&post req params after http parsing
 
 
 def get(
@@ -123,8 +126,8 @@ def get(
     # Connection: keep-alive\r\n #HTTP/1.1 default behaviour, but "close" can be used to mimic the HTTP/1.0 behaviour
 
     """
-    hopefully my reptile brain will remember to hash and encrypt the info im sending out 
-    to the proxy cuz with free proxies and encrypt the latter cuz
+    hopefully my reptile brain will remember to hash the info im sending out 
+    to the proxy and encrypt the latter cuz with free proxies
     its kinda not very safe hhaha xD
     """
 

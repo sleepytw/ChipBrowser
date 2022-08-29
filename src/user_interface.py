@@ -2,30 +2,27 @@ from os import system, path, get_terminal_size as _size
 from abc import abstractmethod
 import platform
 import ctypes
-import random
 import re
 import sys
 import os
+import random
 
-from pyautogui import size
+#from pyautogui import size
 from msvcrt import getwch, putwch
 import shutil
+import numpy as np
 
 from functools import lru_cache, cache
-from threading import Thread
-from time import sleep
+from threading import Thread as Process
+from time import perf_counter, sleep
 import asyncio
 
 from color_interpreter import Effect, Fore, Back, Style, _style
 from requestslib3 import get, post
 
-def rainbow(text: str):
-    # just a dream honestly
-    # tried everything in the world this shit doesnt wanna run properly kinda depressing
-    # + same with the background animation :(
-
+def rainbow_credits(text: str):
     while True:
-        output = f'{text}\r'
+        output = f'\t\t\t\t\t{text}\r'
         color_options = [color for color in vars(Fore) if color not in ["LIGHTBLACK_EX", "LIGHTWHITE_EX", "BLACK", "WHITE", "RESET"]]
         output = getattr(Fore, random.choice(color_options).upper()) + output #f'{"":<15}'
 
@@ -37,11 +34,11 @@ class InsufficientError(Exception):
     ...
 
 
-async def _title(attr: str=None) ->...:
+async def _title(attr: str=None) -> ...:
     return ctypes.windll.kernel32.SetConsoleTitleW("Chip Browser")
 
 
-async def _icon(arg: None=None) ->...:
+async def _icon(arg: None=None) -> ...:
     return None
 
 
@@ -51,12 +48,17 @@ def _transf(code):
     )  # manually set a variable for detection derived from the characters dict; EX: chr(ascii.characters['key'])
 
 
-EasterEgg  = True
+EasterEgg  = False
+
+TRACK      = []
+SEED       = 9223372036854775807
+MULT       = 16807
+MOD        = (2**31) + 1
 
 __ASSETS__ = [
     'asyncio.run(_title("Chip Browser"))',
     "asyncio.run(_icon())",
-    "_screen.set(1920, 1080)",
+    #"_screen.set(1920, 1080)",
     "_screen.fullscreen()"
 ]
 
@@ -85,7 +87,8 @@ class conn_establish(object):
         return response
 
     @abstractmethod
-    def http_to_https(_: ...) ->...:
+    def http_to_https(
+        _: ...) -> ...:
         return  # integrated into requestslib3 already
 
 
@@ -95,6 +98,47 @@ conn_establish.http(
                     path  = "/ip",
                     proxy = "103.117.192.14"
                 )
+
+
+class RANDOM_ENGINE(object):
+    @classmethod
+    def timer(cls, index: int = 0):
+        while True:
+            cpu_time = perf_counter()
+            index += 1
+            TRACK.append((index + cpu_time) * (SEED * MULT + 1) % MOD)
+            sleep(1)
+            TRACK.clear()
+            if index == 10: index = 0
+
+    @classmethod
+    def algorithm(cls, low=0, high=1, size=1):
+        cpu_time = perf_counter()
+        U = np.zeros(size)
+        x = (SEED * MULT + 1) % MOD
+        U[0] = x / MOD
+        for i in range(1, size):
+            x = (SEED * MULT + (i + cpu_time)) % MOD
+            U[i] = x / MOD
+        return U
+
+    @classmethod
+    def pseudo_uniform(cls, low=0, high=1, size=1):
+
+        return low + (high - low) * RANDOM_ENGINE.algorithm(SEED=SEED, size=size)
+
+    @classmethod
+    def urandom(cls, array: list, size=1):
+        #math could use some improvement its kinda late tho cba will see
+        t = perf_counter()
+        SEED = int(10**9 * TRACK[0] * float(str(t - int(t))[0:]))
+        idx = int(RANDOM_ENGINE.pseudo_uniform(low=0, high=len(array), SEED=SEED, size=1))
+        return array[idx]
+
+    @abstractmethod
+    def test(cls):
+        for _ in range(10):
+            print(urandom(['heads', 'tails']), end=' ')
 
 
 class LOAD_ASSETS(object):
@@ -151,9 +195,10 @@ def Background():
 
     def get_random_flake():
         try:
-            flake = random.choice([u' ❄', 
-                                   u' ❅', 
-                                   u' ❆'])
+            flake = random.choice([ ' *',
+                                   u' ❄' , 
+                                   u' ❅'  ,
+                                   u' ❆'  ])
 
             if flake is not None:
                 return flake
@@ -270,10 +315,10 @@ class _screen(object):
         width  : None = None, 
         height : None = None, 
         depth  : int  = 32
-        ):
+    ):
 
         """
-        Set the primary display to the specified mode
+        Set the primary display to the specified MODe
         """
 
         if sys.platform == "win32":
@@ -309,10 +354,10 @@ class _screen(object):
         width  : None = None, 
         height : None = None, 
         depth  : int  = 32
-        ):
+    ):
 
         """
-        Set the primary windows display to the specified mode
+        Set the primary windows display to the specified MODe
         """
         import win32api
 
@@ -320,10 +365,10 @@ class _screen(object):
             if not depth:
                 depth = 32
 
-            mode = win32api.EnumDisplaySettings()
-            mode.PelsWidth, mode.PelsHeight, mode.BitsPerPel = width, height, depth
+            MODe = win32api.EnumDisplaySettings()
+            MODe.PelsWidth, MODe.PelsHeight, MODe.BitsPerPel = width, height, depth
 
-            win32api.ChangeDisplaySettings(mode, 0)
+            win32api.ChangeDisplaySettings(MODe, 0)
 
         else:
             win32api.ChangeDisplaySettings(None, 0)
@@ -331,7 +376,7 @@ class _screen(object):
     @staticmethod
     def _win32_set_default():
         """
-        Reset the primary windows display to the default mode
+        Reset the primary windows display to the default MODe
         """
 
         user32 = ctypes.windll.user32
@@ -427,7 +472,7 @@ class HTML_INTERPRETER:
 def _center(
     format : str, 
     string : str
-    ):
+):
     center = int(len(format) / 2)
     return (
         format[:center + 6] + string + format[center + len(string):]
@@ -436,7 +481,7 @@ def _center(
 
 def display_single(
     _attr         : str,
-    _offset_multi : int   or None,
+    _offset_MULTi : int   or None,
     _centered     : bool,
     _width        : int   or None,
     _height       : int   or None,
@@ -448,14 +493,14 @@ def display_single(
     else:
         width, height = _width, _height
 
-    if _offset_multi is None:
+    if _offset_MULTi is None:
         offset = len(_attr)
         if offset < 4:
             while offset != 4:
                 offset += 1
 
-    elif isinstance(_offset_multi, int):
-        offset = _offset_multi
+    elif isinstance(_offset_MULTi, int):
+        offset = _offset_MULTi
         if offset < 4:
             while offset != 4:
                 offset += 1
@@ -536,7 +581,7 @@ def display(
                         display_single(
                             _attr         = _x,
                             _centered     = True,
-                            _offset_multi = None,
+                            _offset_MULTi = None,
                             _width        = width,
                             _height       = height,
                             kwargs        = None,
@@ -570,7 +615,7 @@ def display(
 
 # backround->(u"\u001b[48;5;")
 @_LIMITER(arg=1)
-def _load(**kwargs):
+def _load(**kwargs) -> str:
     width = kwargs["width"]
     height = kwargs["height"]
     for _i, _x in enumerate(__ASSETS__):
@@ -585,6 +630,8 @@ def _load(**kwargs):
     print("\u001b[0m")
     system("cls")
 
+
+#TODO: getattr/setattr to print the text on the screen so that it doesnt get fucked by the snowflakes and shit xD
 
 def _main(_string) -> _load(
         **geometry.__dict__
@@ -610,17 +657,16 @@ def _main(_string) -> _load(
 def _keydetection(ascii: object) -> ...:
     while True:
         system(
-
-            
             "taskkill /f /im python.exe") if getwch() == ascii.CTRL_Q else None
         ... if getwch() == chr(ascii.characters["/"]) else None
         # refresh upon pressing a button kinda hard tho, hvae to reiterate all vars from recepient func
 
-main = Thread(target=_main, args=(response,))
-main.start()
-keydetection = Thread(target=_keydetection, args=(ASCII_TABLE,))
-keydetection.start()
+
+Process(target=RANDOM_ENGINE.timer).start() #cpu calibration
+Process(target=_main, args=(response,)).start() #main
+Process(target=_keydetection, args=(ASCII_TABLE,)).start() #keydetection
+
+
 if bool(EasterEgg):
-    rainbow_credits=Thread(target=rainbow, args=('-> by sleepytw xD',))
-    rainbow_credits.start()
+    Process(target=rainbow_credits, args=('-> by sleepytw xD',)).start() #rainbow credits
     Background()
