@@ -20,13 +20,69 @@ import asyncio
 from color_interpreter import Effect, Fore, Back, Style, _style
 from requestslib3 import get, post
 
+
+EasterEgg  = True
+
+TRACK      = []
+
+__ASSETS__ = [
+    'asyncio.run(_title("Chip Browser"))',
+    "asyncio.run(_icon())",
+    #"_screen.set(1920, 1080)",
+    "_screen.fullscreen()"
+]
+
+
+class RANDOM_ENGINE(object):
+    @classmethod
+    def timer(cls, index: int = 0, seed=9223372036854775807, mult=16807, mod=(2**31) + 1):
+        
+        while True:
+            cpu_time = perf_counter()
+            index += 1
+            TRACK.append((index + cpu_time) * (seed * mult + 1) % mod)
+            sleep(1)
+            TRACK.clear()
+            if index == 10: index = 0
+
+    @classmethod
+    def algorithm(cls, low=0, high=1, mult=16807, mod=(2**31) + 1, seed=9223372036854775807, size=1):
+
+        cpu_time = perf_counter()
+        U = np.zeros(size)
+        x = (seed * mult + 1) % mod
+        U[0] = x / mod
+        for i in range(1, size):
+            x = (seed * mult + (i + cpu_time)) % mod
+            U[i] = x / mod
+        return U
+
+    @classmethod
+    def pseudo_uniform(cls, low=0, high=1, seed=9223372036854775807, size=1):
+
+        return low + (high - low) * RANDOM_ENGINE.algorithm(seed=seed, size=size)
+
+    @classmethod
+    def urandom(cls, array: list, seed=9223372036854775807, size=1):
+        #math could use some improvement its kinda late tho cba will see
+        cpu_time = perf_counter()
+        seed_local = int(10**9 * TRACK[0] * float(str(cpu_time - int(cpu_time))[0:]))
+        idx = int(RANDOM_ENGINE.pseudo_uniform(low=0, high=len(array), seed=seed_local, size=1))
+        return array[idx]
+
+    @abstractmethod
+    def URANDOM_BLUEPRINT(cls):
+        for _ in range(10):
+            print(RANDOM_ENGINE.urandom(['heads', 'tails']), end=' ')
+
+
 def rainbow_credits(text: str):
     while True:
-        output = f'\t\t\t\t\t{text}\r'
+        output = f'{text}\r' # '\t'*int(shutil.get_terminal_size()[0])
         color_options = [color for color in vars(Fore) if color not in ["LIGHTBLACK_EX", "LIGHTWHITE_EX", "BLACK", "WHITE", "RESET"]]
-        output = getattr(Fore, random.choice(color_options).upper()) + output #f'{"":<15}'
+        output = getattr(Fore, RANDOM_ENGINE.urandom(color_options).upper()) + output #f'{"":<15}'
 
-        print("\033[1;1H"+output+"\033[1;1H")
+        print("\033[1;1H"+output+"\033[1;1H") # '\n'*int(shutil.get_terminal_size()[1])
         sleep(0.04)
 
 
@@ -46,21 +102,6 @@ def _transf(code):
     return chr(
         code
     )  # manually set a variable for detection derived from the characters dict; EX: chr(ascii.characters['key'])
-
-
-EasterEgg  = False
-
-TRACK      = []
-SEED       = 9223372036854775807
-MULT       = 16807
-MOD        = (2**31) + 1
-
-__ASSETS__ = [
-    'asyncio.run(_title("Chip Browser"))',
-    "asyncio.run(_icon())",
-    #"_screen.set(1920, 1080)",
-    "_screen.fullscreen()"
-]
 
 
 class conn_establish(object):
@@ -98,47 +139,6 @@ conn_establish.http(
                     path  = "/ip",
                     proxy = "103.117.192.14"
                 )
-
-
-class RANDOM_ENGINE(object):
-    @classmethod
-    def timer(cls, index: int = 0):
-        while True:
-            cpu_time = perf_counter()
-            index += 1
-            TRACK.append((index + cpu_time) * (SEED * MULT + 1) % MOD)
-            sleep(1)
-            TRACK.clear()
-            if index == 10: index = 0
-
-    @classmethod
-    def algorithm(cls, low=0, high=1, size=1):
-        cpu_time = perf_counter()
-        U = np.zeros(size)
-        x = (SEED * MULT + 1) % MOD
-        U[0] = x / MOD
-        for i in range(1, size):
-            x = (SEED * MULT + (i + cpu_time)) % MOD
-            U[i] = x / MOD
-        return U
-
-    @classmethod
-    def pseudo_uniform(cls, low=0, high=1, size=1):
-
-        return low + (high - low) * RANDOM_ENGINE.algorithm(SEED=SEED, size=size)
-
-    @classmethod
-    def urandom(cls, array: list, size=1):
-        #math could use some improvement its kinda late tho cba will see
-        t = perf_counter()
-        SEED = int(10**9 * TRACK[0] * float(str(t - int(t))[0:]))
-        idx = int(RANDOM_ENGINE.pseudo_uniform(low=0, high=len(array), SEED=SEED, size=1))
-        return array[idx]
-
-    @abstractmethod
-    def test(cls):
-        for _ in range(10):
-            print(urandom(['heads', 'tails']), end=' ')
 
 
 class LOAD_ASSETS(object):
@@ -182,6 +182,7 @@ width = geometry.__dict__["width"]
 height = geometry.__dict__["height"]
 
 def Background():
+    global COLUMNS, ROWS
     snowflakes = {}
 
 
@@ -189,13 +190,13 @@ def Background():
         return shutil.get_terminal_size()
 
 
-    columns, rows = get_terminal_size()
-    rows-=3
+    COLUMNS, ROWS = get_terminal_size()
+    ROWS-=3
 
 
     def get_random_flake():
         try:
-            flake = random.choice([ ' *',
+            flake = RANDOM_ENGINE.urandom([ ' *',
                                    u' ❄' , 
                                    u' ❅'  ,
                                    u' ❆'  ])
@@ -234,7 +235,7 @@ def Background():
 
         if stack == "pile":
             if col not in current_rows:
-                current_rows[col] = rows
+                current_rows[col] = ROWS
 
             current_row = current_rows[col]
 
@@ -242,14 +243,14 @@ def Background():
             # the screen, lets reset it so it drops the
             # pile back
             if current_row == 1:
-                current_row = rows
+                current_row = ROWS
                 current_rows[col] = current_row
 
             # If next row is the end, lets just move the rows up by one
             if snowflakes[col][0] + 1 == current_row:
                 current_rows[col] -= 1
         else:
-            current_row = rows
+            current_row = ROWS
 
         # If next row is the end, lets start a new snow flake
         if snowflakes[col][0] + 1 == current_row:
@@ -270,11 +271,11 @@ def Background():
         system('cls')
 
         while True:
-            col = random.choice(range(1, int(columns)))
+            col = RANDOM_ENGINE.urandom(range(1, int(COLUMNS)))
 
             # Don't print snowflakes right next to each other, since
             # unicode flakes take 2 spaces
-            if col in range(0, 5) or col in range(columns-5, columns):
+            if col in range(0, 5) or col in range(COLUMNS-5, COLUMNS):
                 continue
 
 
@@ -318,7 +319,7 @@ class _screen(object):
     ):
 
         """
-        Set the primary display to the specified MODe
+        Set the primary display to the specified mode
         """
 
         if sys.platform == "win32":
@@ -357,7 +358,7 @@ class _screen(object):
     ):
 
         """
-        Set the primary windows display to the specified MODe
+        Set the primary windows display to the specified mode
         """
         import win32api
 
@@ -365,10 +366,10 @@ class _screen(object):
             if not depth:
                 depth = 32
 
-            MODe = win32api.EnumDisplaySettings()
-            MODe.PelsWidth, MODe.PelsHeight, MODe.BitsPerPel = width, height, depth
+            mode = win32api.EnumDisplaySettings()
+            mode.PelsWidth, mode.PelsHeight, mode.BitsPerPel = width, height, depth
 
-            win32api.ChangeDisplaySettings(MODe, 0)
+            win32api.ChangeDisplaySettings(mode, 0)
 
         else:
             win32api.ChangeDisplaySettings(None, 0)
@@ -376,7 +377,7 @@ class _screen(object):
     @staticmethod
     def _win32_set_default():
         """
-        Reset the primary windows display to the default MODe
+        Reset the primary windows display to the default mode
         """
 
         user32 = ctypes.windll.user32
@@ -481,7 +482,7 @@ def _center(
 
 def display_single(
     _attr         : str,
-    _offset_MULTi : int   or None,
+    _offset_multi : int   or None,
     _centered     : bool,
     _width        : int   or None,
     _height       : int   or None,
@@ -493,14 +494,14 @@ def display_single(
     else:
         width, height = _width, _height
 
-    if _offset_MULTi is None:
+    if _offset_multi is None:
         offset = len(_attr)
         if offset < 4:
             while offset != 4:
                 offset += 1
 
-    elif isinstance(_offset_MULTi, int):
-        offset = _offset_MULTi
+    elif isinstance(_offset_multi, int):
+        offset = _offset_multi
         if offset < 4:
             while offset != 4:
                 offset += 1
@@ -581,7 +582,7 @@ def display(
                         display_single(
                             _attr         = _x,
                             _centered     = True,
-                            _offset_MULTi = None,
+                            _offset_multi = None,
                             _width        = width,
                             _height       = height,
                             kwargs        = None,
