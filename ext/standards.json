@@ -1,0 +1,13 @@
+
+{
+    "ip address": null,
+    "port": ["8080", "3128"],
+    "protocol": ["HTTPS"],
+    "anonymity": null,
+    "country": ["Germany", "United States"],
+    "region": null,
+    "city": null,
+    "uptime": null,
+    "response": null,
+    "transfer": null
+}
