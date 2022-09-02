@@ -2,8 +2,6 @@ import re
 
 from html import unescape
 
-from html.parser import HTMLParser
-
 
 def escape(s, quote=True):
     """
