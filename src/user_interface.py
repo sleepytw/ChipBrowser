@@ -618,9 +618,11 @@ def _keydetection(ascii: object) -> ...:
         # refresh upon pressing a button kinda hard tho, hvae to reiterate all vars from recepient func
 
 
-Process(target=RANDOM.timer).start() #cpu calibration
-Process(target=_keydetection, args=(ASCII_TABLE,)).start() #keydetection
-Process(target=main, args=(response,)).start() #main
+Process(target=RANDOM.timer, daemon=True).start() #cpu calibration
+Process(target=_keydetection, args=(ASCII_TABLE,), daemon=True).start() #keydetection
+Process(target=main, args=(response,), daemon=True).start() #main
+
+
 
 
 if bool(EasterEgg):
