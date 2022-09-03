@@ -52,14 +52,10 @@ class RANDOM(object):
         idx = int(RANDOM.pseudo_uniform(low=0, high=len(array), seed=seed_local, size=1))
         return array[idx]
 
-    @classmethod
+    @basemethod
     def URANDOM_BLUEPRINT(cls):
         for _ in range(10):
             print(RANDOM.urandom(
                 ['heads', 'tails']
                 ), end=' ')
 
-
-# Process(target=RANDOM.timer).start() #cpu calibration
-
-# RANDOM.URANDOM_BLUEPRINT()
