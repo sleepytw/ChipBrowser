@@ -3,6 +3,7 @@ import ssl
 
 import RSA_Encryption as rsa
 
+
 class Encryption(object):
     
     '''
@@ -17,6 +18,12 @@ class Encryption(object):
     evrything else sha256 for example idk xD
 
     encrypt, all attributes like src/dst_ip to prevent MITM attacks leading to DDOS attacks & other exploits
+    '''
+
+    '''
+    scheme:
+
+    client (encrypt) -> vpn server (decrypt) -> redirect to webserver -> recv from webserver -> vpn server (encrypt, response) -> client (decrypt, final)
     '''
 
     @classmethod
