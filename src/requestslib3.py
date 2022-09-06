@@ -13,15 +13,6 @@ class EmptyException(Exception):
 
 os.system("")
 
-"""
-TODO:
--> POST REQUESTS (AUTH/2, COOKIES ETC)
--> parse http headers received and spit them into .text(); .content(); .headers() etc
--> redirect site detection (from scratch)
--> http to https conn compatibility {being able to connect to https sites whilst sending http requests} (from scratch) POST & GET
--> proxy E2EE encryption (from scratch)
--> proxy chain
-"""
 
 path = os.path.dirname(os.path.abspath(__file__))  # path to file
 main_path = os.path.dirname(path)
@@ -104,71 +95,84 @@ class http_blueprints(ABC):
 
 
 def get(
-    _address  : tuple,  # dst.address&port (if dst.ip is a domain it will convert it to ip format else ...)
-    _path     : str,  # /hidden.html; /ip; /search or whatever
-    # _cookie : str,
-    _proxy    : tuple,  # init proxy address&port (...)
+    address  : tuple,  # dst.address&port (if dst.ip is a domain it will convert it to ip format else ...)
+    proxy    : tuple,  # init proxy address&port (...)
+    _path    : str  # /hidden.html; /ip; /search or whatever
 ) -> str:
 
-    _http = f"GET /{_path} HTTP/1.1\r\nHost: {_address[0]}\r\n{''.join(rdata['headers'])}: {''.join(rdata['headers']['User-Agent'])}\r\nConnection: keep-alive\r\n\r\n"
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    headers = """\
+GET /{path} HTTP/1.1\r\n\
+Host: {host}\r\n\
+User-Agent: {user_agent}\r\n\
+Connection: keep-alive\r\n\r\n"""
+
+    payload = headers.format(
+        path       = _path,
+        host       = address[0],
+        user_agent = {''.join(rdata['headers']['User-Agent'])}
+    ).encode()
+
     # -- HTTP onto TCP/IP
-    if _proxy[0] == "127.0.0.1":
-        sock.connect(_address)
-    else:
-        sock.connect(_proxy)
-    if _address[1] == 443:
-        context = ssl.create_default_context()
-        sock = context.wrap_socket(sock, server_hostname=_address[0])
-    sock.sendall(_http.encode())
-    response = sock.recv(65555)
-    sock.close()
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+
+        if proxy[0] == "127.0.0.1":
+            sock.connect(address)
+        
+        sock.connect(proxy)
+
+        if address[1] == 443:
+            context = ssl.create_default_context()
+            sock    = context.wrap_socket(sock, server_hostname=address[0])
+
+        sock.sendall(payload)
+        response = sock.recv(65555)
+
     return response.decode()
-
-    # Connection: keep-alive\r\n #HTTP/1.1 default behaviour, but "close" can be used to mimic the HTTP/1.0 behaviour
-
-    """
-    hopefully my reptile brain will remember to hash the info im sending out 
-    to the proxy and encrypt the latter cuz with free proxies
-    its kinda not very safe hhaha xD
-    """
-
-
-# response=get(('httpbin.org', 80), 'ip', ('103.117.192.14', 80))
 
 
 def post(
-    _address : tuple,  # dst.address&port (if dst.ip is a domain it will convert it to ip format else ...)
-    _path    : str,
-    _cookie  : str,
-    _auth    : str,
-    _proxy   : tuple,  # init proxy address&port
+    address  : tuple,  # dst.address&port (if dst.ip is a domain it will convert it to ip format else ...)
+    proxy    : tuple,  # init proxy address&port (...)
+    _path    : str,  # /hidden.html; /ip; /search or whatever
+    _payload : str
 ) -> str:
 
-    _http = f"POST /{_path} HTTP/1.1\r\nHost: {_address[0]}\r\n{''.join(rdata['headers'])}: {''.join(rdata['headers']['User-Agent'])}\r\nConnection: keep-alive\r\nCookie: {_cookie}\r\nContent-Length: {len(_cookie)}\r\n\r\n"
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    headers = """\
+GET /{path} HTTP/1.1\r\n\
+Host: {host}\r\n\
+Content-Type: {content_type}\r\n\
+Content-Length: {content_length}\r\n\
+User-Agent: {user_agent}\r\n\
+Connection: keep-alive\r\n\r\n"""
+
+
+    body_bytes = _payload.encode('ascii')
+    header_bytes = headers.format(
+        path           = _path,
+        host           = address[0],
+        content_type   = "application/x-www-form-urlencoded",
+        content_length = len(body_bytes),
+        user_agent     = {''.join(rdata['headers']['User-Agent'])}
+    ).encode()
+
+    payload = header_bytes + body_bytes
+
     # -- HTTP onto TCP/IP
-    if _proxy[0] == "127.0.0.1":
-        sock.connect(_address)
-    else:
-        sock.connect(_proxy)
-    if _address[1] == 443:
-        context = ssl.create_default_context()
-        sock = context.wrap_socket(sock, server_hostname=_address[0])
-    sock.sendall(_http.encode())
-    response = sock.recv(65555)
-    sock.close()
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+
+        if proxy[0] == "127.0.0.1":
+            sock.connect(address)
+        
+        sock.connect(proxy)
+
+        if address[1] == 443:
+            context = ssl.create_default_context()
+            sock    = context.wrap_socket(sock, server_hostname=address[0])
+
+        sock.sendall(payload)
+        response = sock.recv(65555)
+
     return response.decode()
-
-
-# post(('testphp.vulnweb.com', 80), 'login.php', 'login=test%2Ftest', ..., ('103.117.192.14', 80))
-
-"""
-relation ->
-POST /notes.html HTTP/1.1\r\nContent-Length: 30\r\nCookie: username=sleepyxd; password=urmom123\r\n\r\naction=addNote&input=["index{i}"]'.encode()
-method; url; param; content-length; cookies; auth; verify; action within the browser or whatever tf
-"""
-
 
 def _pseudo(
     _address : ..., 

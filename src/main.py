@@ -2,6 +2,8 @@ import json, os, importlib, socket
 
 from ChipEngine.color_interpreter import Fore, Back, Style, _style
 from ChipEngine.json_dump import *
+
+# directly import the gui will execute every line therefore running the gui, doing this instead of initializing the code here cuz kkidna boring idkx D
 import user_interface
 
 

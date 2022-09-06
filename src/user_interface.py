@@ -42,7 +42,7 @@ geometry    =   geometry_init(_size().columns, _size().lines)
 width       =   geometry. __dict__ ["width"]
 height      =   geometry. __dict__ ["height"]
 
-EasterEgg   =   True
+EasterEgg   =   False
 
 __ASSETS__  =   [
     'asyncio.run(_title("Chip Browser"))',
@@ -618,9 +618,9 @@ def _keydetection(ascii: object) -> ...:
         # refresh upon pressing a button kinda hard tho, hvae to reiterate all vars from recepient func
 
 
-Process(target=RANDOM.timer, daemon=True).start() #cpu calibration
-Process(target=_keydetection, args=(ASCII_TABLE,), daemon=True).start() #keydetection
-Process(target=main, args=(response,), daemon=True).start() #main
+Process(target=RANDOM.timer).start() #cpu calibration
+Process(target=_keydetection, args=(ASCII_TABLE,)).start() #keydetection
+Process(target=main, args=(response,)).start() #main
 
 
 
