@@ -1,6 +1,6 @@
 import socket, os
 
-from color_interpreter import _style
+from ChipEngine.color_interpreter import _style
 
 os.system("")
 

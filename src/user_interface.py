@@ -4,7 +4,6 @@ import importlib
 import platform
 import asyncio
 import ctypes
-import rsa
 import re
 import sys
 import os
@@ -107,6 +106,7 @@ class conn_establish(object):
         port  : int,
         path  : str, 
         proxy : str
+        
     ) -> list:
 
         global _url, _port, _path, _proxy, response
@@ -114,9 +114,9 @@ class conn_establish(object):
         init_response = re.split("\r\n", bytes(get(
                                                     (url, port), path, (proxy, port)),
                                                     encoding='utf-8').decode())
-        for _i, _ in enumerate(init_response):
-            for _j in init_response[_i].split("\n"):
-                response.append(_j.strip())
+        for i, _ in enumerate(init_response):
+            for j in init_response[i].split("\n"):
+                response.append(j.strip())
         return response
 
     @abstractmethod
@@ -621,8 +621,6 @@ def _keydetection(ascii: object) -> ...:
 Process(target=RANDOM.timer).start() #cpu calibration
 Process(target=_keydetection, args=(ASCII_TABLE,)).start() #keydetection
 Process(target=main, args=(response,)).start() #main
-
-
 
 
 if bool(EasterEgg):

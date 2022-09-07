@@ -55,13 +55,14 @@ class Proxy(object):
 
     def redirect(self, port_web: int = 80) -> str: #default http port 80
         
-        redirect = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        redirect.connect((self.dst_url, port_web))
-        #if the port is 443 https, dont encrypt, data already encrypted
-        if self.port == 443:
-            context  = ssl.create_default_context()
-            redirect = context.wrap_socket(redirect, server_hostname=self.dst_url)
-        redirect.sendall(self.payload.encode())
-        redirect_response = redirect.recv(self.buffer_size)
-        redirect.close()
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as redirect:
+
+            redirect.connect((self.dst_url, port_web))
+            #if the port is 443 https, dont encrypt, data already encrypted
+            if self.port == 443:
+                context  = ssl.create_default_context()
+                redirect = context.wrap_socket(redirect, server_hostname=self.dst_url)
+            redirect.sendall(self.payload.encode())
+            redirect_response = redirect.recv(self.buffer_size)
+            
         return redirect_response.decode()

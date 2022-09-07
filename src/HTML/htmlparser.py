@@ -1,41 +1,49 @@
 import re
 
-from html import unescape
+html_example = """
+<html>
+<head>
+  <title>A Meaningful Page Title<title/>
+<head/>
+<body>
 
+The content of the document......
 
-def escape(s, quote=True):
-    """
-    Replace special characters "&", "<" and ">" to HTML-safe sequences.
-    If the optional flag quote is true (the default), the quotation mark
-    characters, both double quote (") and single quote (') characters are also
-    translated.
-    """
-    
-    s = s.replace("&", "&amp;") # Must be done first!
-    s = s.replace("<", "&lt;")
-    s = s.replace(">", "&gt;")
-    if quote:
-        s = s.replace('"', "&quot;")
-        s = s.replace('\'', "&#x27;")
-    return s
+<body/>
+<html/>
+"""
+
+commands = [
+    'html', 'head', 'body', 'title'
+    ]
+
 
 class HTMLParser(object):
 
-    def __init__(self, url, data, rawdata):
-        self.url     = url
-        self.rawdata = rawdata
-
-    def segregate(self, xdata):
+    @classmethod
+    def segregate(cls, xdata):
         '''
         :params rawdata: // seperating headers/&http_response from the package 
         '''
 
-        http_response = self.xdata.find('\r\n\r\n')
+        http_response = xdata.find('\r\n\r\n')
         if http_response >= 0:
-            return self.xdata[http_response+4:]
+            return xdata[http_response+4:]
 
-        return self.rawdata
+        return xdata
     
-    def parse(self):
-        data = HTMLParser.segregate(self.rawdata) # data -> html part
+    @classmethod
+    def parse(cls, rawdata, trace: dict = {}) -> str:
+        data = HTMLParser.segregate(rawdata) # data -> html part
+
+        def index(command): 
+            try:
+                return trace.update(
+                    {
+                        str(command): data[data.find(f'<{command}>')+len(f'<{command}>'):data.find(f'<{command}/>')]
+                        }
+                    )
+            except:
+                print('An error occurred while parsing the data.')
         
+
