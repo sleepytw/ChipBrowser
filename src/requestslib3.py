@@ -98,6 +98,7 @@ def get(
     address  : tuple,  # dst.address&port (if dst.ip is a domain it will convert it to ip format else ...)
     proxy    : tuple,  # init proxy address&port (...)
     _path    : str  # /hidden.html; /ip; /search or whatever
+
 ) -> str:
 
     headers = """\
@@ -131,10 +132,12 @@ Connection: keep-alive\r\n\r\n"""
 
 
 def post(
+
     address  : tuple,  # dst.address&port (if dst.ip is a domain it will convert it to ip format else ...)
     proxy    : tuple,  # init proxy address&port (...)
     _path    : str,  # /hidden.html; /ip; /search or whatever
     _payload : str
+
 ) -> str:
 
     headers = """\
