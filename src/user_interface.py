@@ -165,7 +165,7 @@ class HTML_Interpreter:
         html.parse(self.data, preset = self.preset)
 
     def main(self) -> None:
-        
+
         if self.preset is True:
             print(self.trace['html'])
 

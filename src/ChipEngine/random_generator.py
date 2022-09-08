@@ -52,6 +52,13 @@ class RANDOM(object):
         idx = int(RANDOM.pseudo_uniform(low=0, high=len(array), seed=seed_local, size=1))
         return array[idx]
 
+    @classmethod
+    def shuffle(cls, array: list):
+        for i, _ in enumerate(array):
+            array[i] = array[RANDOM.urandom(array)]
+
+        return array
+
     @basemethod
     def URANDOM_BLUEPRINT(cls):
         for _ in range(10):
