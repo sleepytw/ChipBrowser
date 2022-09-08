@@ -25,8 +25,25 @@ from ChipEngine.random_generator import RANDOM
 from requestslib3 import get, post
 from __init__ import basemethod
 
+from HTML.htmlparser import HTMLParser as html
+
 path = os.path.dirname(os.path.abspath(__file__))  # path to file
 main_path = os.path.dirname(path)
+
+html_example = """
+<!DOCTYPE html>
+<html>
+<head>
+<title>Page Title</title>
+</head>
+<body>
+
+<h1>This is a Heading</h1>
+<p>This is a paragraph.</p>
+
+</body>
+</html>
+"""
 
 
 class geometry_init:
@@ -113,10 +130,12 @@ class conn_establish(object):
         _url, _port, _path, _proxy, response = url, port, path, proxy, []
         init_response = re.split("\r\n", bytes(get(
                                                     (url, port), (proxy, port), path),
-                                                    encoding='utf-8').decode())
+                                                    encoding='utf-8').decode()
+                                                    )
         for i, _ in enumerate(init_response):
-            for j in init_response[i].split("\n"):
+            for _, j in enumerate(init_response[i].split("\n")):
                 response.append(j.strip())
+
         return response
 
     @abstractmethod
@@ -131,6 +150,26 @@ conn_establish.http(
                     path  = "/ip",
                     proxy = "103.117.192.14"
                 )
+
+class HTML_Interpreter:
+
+    def __init__(self) -> None:
+
+        # dynamic values from here
+        self.data = html.segregate(html_example)
+
+        self.preset    : bool = False 
+        self.trace     : dict = html.trace 
+        self.trace_all : dict = html.trace_all
+
+        html.parse(self.data, preset = self.preset)
+
+    def main(self) -> None:
+        
+        if self.preset is True:
+            print(self.trace['html'])
+
+        print(self.trace_all['html'])
 
 
 class LOAD_ASSETS(object):
@@ -590,8 +629,8 @@ def _load(**kwargs) -> str:
 
 
 def main(_string) -> _load(
-        **geometry.__dict__
-    ):
+    **geometry.__dict__
+):
     while True:
         global width, height
         geometry = object. __new__ (geometry_init, _size().columns, _size().lines)
