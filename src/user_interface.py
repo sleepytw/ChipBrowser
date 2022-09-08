@@ -156,7 +156,7 @@ class HTML_Interpreter:
     def __init__(self) -> None:
 
         # dynamic values from here
-        self.data = html.segregate(html_example)
+        self.data = html.segregate(response)
 
         self.preset    : bool = False 
         self.trace     : dict = html.trace 
