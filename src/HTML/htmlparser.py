@@ -1,5 +1,6 @@
 import re
 
+
 class HTMLParser(object):
 
     commands = [
@@ -23,7 +24,7 @@ class HTMLParser(object):
     
     @classmethod
     def parse(cls, rawdata, preset: bool) -> str:
-        data  = HTMLParser.segregate(rawdata); data_cache = [] # data -> html part
+        data  = HTMLParser.segregate(rawdata) # data -> html part
 
         index = lambda data, command: HTMLParser.trace.update(
                 {
@@ -34,10 +35,7 @@ class HTMLParser(object):
                 
             )
 
-        for i, k in enumerate(data):
-            data_cache.append(k)
-
-        for i, k in enumerate(data_cache):
+        for i, k in enumerate(data_cache := [k for _, k in enumerate(data)]):
             if data_cache[i] == '>' and data_cache[i+1] != '\n':
                 data_cache[i] += '\n'
             elif data_cache[i] == '<' and data_cache[i+1] == '/' and data_cache[i-2] != '\n':
@@ -61,4 +59,3 @@ class HTMLParser(object):
                 index(set)
 
         index_all(data)
-
