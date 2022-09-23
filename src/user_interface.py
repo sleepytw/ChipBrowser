@@ -510,7 +510,21 @@ def display_single(
         print(
             f'{"":<1}|{_center(" "*(width-offset-2), _attr):<{width-4+len(Fore.CYAN)+(len(Effect.BOLD)+len(Effect.UNDERLINE)+len(Effect.RESET)) if Effect.BOLD and Effect.UNDERLINE and Effect.RESET in _attr else 0}}|'
         )
+ 
+def display_better(msg, indent=1, width=None, title=None): # make for other attributes other than title (instance: paragraph) [html correlation]
 
+    lines = msg.split('\n')
+    space = " " * indent
+    if not width:
+        width = max(map(len, lines))
+    box = f'╔{"═" * (width + indent * 2)}╗\n'  # upper_border
+    if title:
+        box += f'║{space}{title:<{width}}{space}║\n'  # title
+        box += f'║{space}{"-" * len(title):<{width}}{space}║\n'  # underscore
+    box += ''.join([f'║{space}{line:<{width}}{space}║\n' for line in lines])
+    box += f'╚{"═" * (width + indent * 2)}╝'  # lower_border
+
+    return box
 
 def display(
         _attr     : str or list,  # *list -> **strings
