@@ -4,23 +4,23 @@ with ensured protection all through-out;
 
 > custom VPN
 
-				-custom servers/proxies
-				-custom encryption
-				-custom requests
+-custom servers/proxies
+-custom encryption
+-custom requests
 
 
 > custom GUI
 
-				- text padding
-				- packet representation
-				- custom site visualization
-					* custom audio processor
-					* custom image processor
-					* custom html intepreter
+- text padding
+- packet representation
+- custom site visualization
+	* custom audio processor
+	* custom image processor
+	* custom html intepreter
 
 > custom ENGINE
 				
-				- custom random generator
-				- custom color interpreter & json dump for it
+- custom random generator
+- custom color interpreter & json dump for it
 
 <img src="ext\chipbrowserdemo.png">
