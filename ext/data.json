@@ -1,0 +1,12 @@
+
+{
+    "modules": ["ui", 
+                "proxy_scaper",
+                "identifier"],
+    "json_files": [
+        "requests_data.json",
+        "data.json",
+        "standards.json"
+    ],
+    "null": null
+}
