@@ -2,7 +2,7 @@
 An layered encryption command prompt based gui browser for safe access to normal & malicious websites,
 with ensured protection all through-out;
 
-> custom VPN
+> CUSTOM VPN
 
 - custom servers/proxies
 - custom encryption
@@ -10,7 +10,7 @@ with ensured protection all through-out;
 
 
 
-> custom GUI
+> CUSTOM GUI
 
 - text padding
 - packet representation
@@ -21,7 +21,7 @@ with ensured protection all through-out;
 
 
 
-> custom ENGINE
+> CUSTOM ENGINE
 				
 - custom random generator
 - custom color interpreter & json dump for it
