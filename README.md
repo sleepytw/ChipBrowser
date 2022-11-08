@@ -2,15 +2,14 @@
 An layered encryption command prompt based gui browser for safe access to normal & malicious websites,
 with ensured protection all through-out;
 
-> custom VPN (
+> custom VPN
 
 				-custom servers/proxies
 				-custom encryption
 				-custom requests
 
-				);
 
-> custom GUI (
+> custom GUI
 
 				- text padding
 				- packet representation
@@ -19,13 +18,9 @@ with ensured protection all through-out;
 					* custom image processor
 					* custom html intepreter
 
-				);
-
-> custom ENGINE (
+> custom ENGINE
 				
 				- custom random generator
 				- custom color interpreter & json dump for it
-
-				);
 
 <img src="ext\chipbrowserdemo.png">
