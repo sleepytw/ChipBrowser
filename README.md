@@ -4,11 +4,10 @@ with ensured protection all through-out;
 
 > custom VPN
 
--custom servers/proxies
+- custom servers/proxies
+- custom encryption
+- custom requests
 
--custom encryption
-
--custom requests
 
 
 > custom GUI
@@ -19,6 +18,8 @@ with ensured protection all through-out;
 	* custom audio processor
 	* custom image processor
 	* custom html intepreter
+
+
 
 > custom ENGINE
 				
