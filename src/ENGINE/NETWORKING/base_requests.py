@@ -2,9 +2,7 @@ import json, os, importlib, socket
 from abc import ABC, abstractmethod
 import ssl
 
-from ChipEngine.color_interpreter import Fore, Back, Style, _style
-from ChipEngine.json_dump import *
-import ChipVPN.RSA_Encryption as rsa
+
 
 
 class EmptyException(Exception):
@@ -21,77 +19,6 @@ rdata, data = (
     json.load(open(values))
     for (_, values) in enumerate([f"{main_path}\\ext\\requests_data.json", f"{main_path}\\ext\\data.json"])
 )
-
-
-class http_blueprints(ABC):
-    @abstractmethod
-    def _get(
-        _requirements    : ...,
-        _url             : ...,
-        _params          : ...,
-        _data            : ...,
-        _headers         : ...,
-        _cookies         : ...,
-        _files           : ...,
-        _auth            : ...,
-        _timeout         : ...,
-        _allow_redirects : ...,
-        _proxies         : ...,
-        _hooks           : ...,
-        _stream          : ...,
-        _verify          : ...,
-        _cert            : ...,
-        _json            : ...,
-    ) -> str:
-    
-        return (
-            [
-                bool(type(_u16))] for _u16 in locals().values()
-            )
-
-    @abstractmethod
-    def _post(
-        _requirements    : ...,
-        _url             : ...,
-        _data            : ...,
-        _json            : ...,
-        _params          : ...,
-        _headers         : ...,
-        _cookies         : ...,
-        _files           : ...,
-        _auth            : ...,
-        _timeout         : ...,
-        _allow_redirects : ...,
-        _proxies         : ...,
-        _hooks           : ...,
-        _stream          : ...,
-        _verify          : ...,
-        _cert            : ...,
-    ) -> str:
-
-        return (
-            [
-                bool(type(_u15))] for _u15 in locals().values()
-            )
-
-
-    """/ bool.check to make sure that the requirements are the same as the ones given after initial execution but idk might not need it will see/"""
-
-    @abstractmethod
-    def _http(
-        _method        : str,  # "POST" | "GET"
-        _path          : str,  # /hidden.html
-        _version       : str,  # "HTTP /1.0" | "HTTP /1.1"
-        _host          : str,  # localhost:8000
-        _agent         : dict,  # globals()[data]['headers'],
-        _connection    : str,
-        _contentLength : int,
-    ) -> None:
-
-        return (
-            [
-                bool(type(_u6))] for _u6 in locals().values()
-            ) # def of a get&post req params after http parsing
 
 
 def get(

@@ -1,0 +1,6 @@
+
+VAROBJ: str = ''
+
+class CLASSOBJ(object): ...
+
+def FUNCOBJ(self) -> {'identify': 'FUNCTION', 'type': str}: ...
