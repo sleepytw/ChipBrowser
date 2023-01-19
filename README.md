@@ -17,7 +17,7 @@ with ensured protection all through-out;
 - custom site visualization
 	* custom audio processor
 	* custom image processor
-	* custom html intepreter
+	* custom html interpreter
 
 
 
